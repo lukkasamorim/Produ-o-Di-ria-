@@ -1750,10 +1750,7 @@
           : ag ? 'Nenhum gerente cadastrado. Use 👥 para adicionar.' : '';
       }
       // Restaura último gerente usado nesta agência
-      const ultimo = lsGetItem('ultimo_gerente_' + ag);
-      if (ultimo && document.getElementById('ref-gerente').value === '') {
-        document.getElementById('ref-gerente').value = ultimo;
-      }
+      // ref-gerente removido do HTML — sem ação necessária
     }
 
     // Limpa campos de baixo ao trocar de agência (não os de cima)
@@ -2257,8 +2254,8 @@
       arvInicial:  g('m-arvIni'),
       liqInicial:  g('m-liqIni'),
       // Mensal extra
-      netDiaAnterior: parseFloat(document.getElementById('m-netDiaAnt').value)||0,
-      gerente: document.getElementById('ref-gerente').value.trim() || agency,
+      netDiaAnterior: parseFloat((document.getElementById('m-netDiaAnt')||{}).value)||0,
+      gerente: agency,
       // Diário
       prodDesconto: desc, antDemais: ant,
       longoPrazo: lp, liquidacaoTotal: liq,
