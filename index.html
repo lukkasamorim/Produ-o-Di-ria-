@@ -304,10 +304,51 @@
 
   .btn-novo-mes { background:#1a3a6e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px; }
   .btn-novo-mes:hover { background:#15306a; }
+
+  /* ── LOGIN SCREEN ── */
+  #login-screen { position:fixed;inset:0;background:linear-gradient(135deg,#1a3a6e 0%,#0d2550 100%);display:flex;align-items:center;justify-content:center;z-index:99999; }
+  .login-box { background:#fff;border-radius:16px;padding:36px 40px;width:380px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center; }
+  .login-logo { font-size:40px;margin-bottom:8px; }
+  .login-title { font-size:18px;font-weight:700;color:#1a3a6e;margin-bottom:4px; }
+  .login-sub { font-size:12px;color:#888;margin-bottom:24px; }
+  .login-pass-wrap { position:relative;margin-bottom:14px; }
+  .login-pass-wrap input { width:100%;padding:11px 42px 11px 14px;border:1.5px solid #d0d5e0;border-radius:8px;font-size:14px;outline:none;color:#1a1a2e;transition:border-color 0.2s;box-sizing:border-box; }
+  .login-pass-wrap input:focus { border-color:#1a3a6e; }
+  .login-eye { position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;color:#888;user-select:none;background:none;border:none;padding:0; }
+  .login-eye:hover { color:#1a3a6e; }
+  .login-remember { display:flex;align-items:center;gap:8px;margin-bottom:18px;justify-content:flex-start; }
+  .login-remember input[type=checkbox] { width:16px;height:16px;accent-color:#1a3a6e;cursor:pointer;flex-shrink:0; }
+  .login-remember label { font-size:12px;color:#555;cursor:pointer; }
+  .login-btn { width:100%;padding:12px;background:#1a3a6e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s; }
+  .login-btn:hover { background:#15306a; }
+  .login-btn:disabled { opacity:0.6;cursor:not-allowed; }
+  .login-err { color:#b92d2d;font-size:12px;margin-top:10px;min-height:18px;font-weight:600; }
+  .login-loading { font-size:12px;color:#888;margin-top:8px;min-height:18px; }
 </style>
 </head>
 <body>
 
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="login-screen" style="display:flex">
+  <div class="login-box">
+    <div class="login-logo">📊</div>
+    <div class="login-title">Produção Diária — Agências</div>
+    <div class="login-sub">Banco Safra · Acesso restrito</div>
+    <div class="login-pass-wrap">
+      <input type="password" id="login-pass" placeholder="Digite sua senha"
+        onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="login-eye" id="login-eye" onclick="toggleSenha()" title="Mostrar/ocultar senha">👁</button>
+    </div>
+    <div class="login-remember">
+      <input type="checkbox" id="login-remember" onchange="onRememberChange()">
+      <label for="login-remember">Lembrar senha neste dispositivo</label>
+    </div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-loading" id="login-loading"></div>
+  </div>
+</div>
 
 <!-- ── LOADING OVERLAY ── -->
 <div id="loading-overlay" style="display:flex">
@@ -829,6 +870,89 @@
   const SUPA_URL = 'https://fdefnukjulrhquzmufke.supabase.co';
   const SUPA_KEY = 'sb_publishable_v8PxB_fIUgVLgT4MoNistQ_OjykbD5O';
 
+
+  // ═══════════════════════════════════════════════════════
+  // ── AUTENTICAÇÃO VIA SUPABASE ──
+  // ═══════════════════════════════════════════════════════
+  const REMEMBER_KEY = 'agencias_senha_salva';
+
+  // Verifica se há senha salva no cache — preenche automaticamente
+  (function checkSavedPassword() {
+    try {
+      const saved = localStorage.getItem(REMEMBER_KEY);
+      if (saved) {
+        document.getElementById('login-pass').value = saved;
+        document.getElementById('login-remember').checked = true;
+      }
+    } catch(e) {}
+  })();
+
+  function toggleSenha() {
+    const input = document.getElementById('login-pass');
+    const eye   = document.getElementById('login-eye');
+    if (input.type === 'password') {
+      input.type = 'text';
+      eye.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      eye.textContent = '👁';
+    }
+  }
+
+  function onRememberChange() {
+    if (!document.getElementById('login-remember').checked) {
+      localStorage.removeItem(REMEMBER_KEY);
+    }
+  }
+
+  async function doLogin() {
+    const pass   = document.getElementById('login-pass').value.trim();
+    const errEl  = document.getElementById('login-err');
+    const loadEl = document.getElementById('login-loading');
+    const btn    = document.getElementById('login-btn');
+    if (!pass) { errEl.textContent = '⚠️ Digite a senha.'; return; }
+
+    errEl.textContent  = '';
+    loadEl.textContent = 'Verificando...';
+    btn.disabled       = true;
+
+    try {
+      const res = await fetch(
+        `${SUPA_URL}/rest/v1/app_config?chave=eq.senha_app&select=valor`,
+        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+      );
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json();
+      if (!rows.length) throw new Error('Configuração não encontrada');
+
+      const senhaCorreta = rows[0].valor;
+      if (pass === senhaCorreta) {
+        // Salva no cache se "lembrar" estiver marcado
+        if (document.getElementById('login-remember').checked) {
+          localStorage.setItem(REMEMBER_KEY, pass);
+        } else {
+          localStorage.removeItem(REMEMBER_KEY);
+        }
+        // Esconde login e inicia app
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('loading-overlay').style.display = 'flex';
+        loadEl.textContent = '';
+        initApp();
+      } else {
+        errEl.textContent  = '❌ Senha incorreta. Tente novamente.';
+        loadEl.textContent = '';
+        btn.disabled       = false;
+        document.getElementById('login-pass').value = '';
+        document.getElementById('login-pass').focus();
+      }
+    } catch(e) {
+      errEl.textContent  = '❌ Erro ao conectar. Verifique sua conexão.';
+      loadEl.textContent = '';
+      btn.disabled       = false;
+      console.error('doLogin erro:', e);
+    }
+  }
+
   function supaHeaders(extra) {
     return Object.assign({
       'Content-Type': 'application/json',
@@ -944,7 +1068,16 @@
   }
 
   // Inicia automaticamente ao carregar a página
-  window.addEventListener('DOMContentLoaded', () => initApp());
+  // Auto-login se senha já estiver salva no cache
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(REMEMBER_KEY);
+    if (saved) {
+      // Tenta login automático com senha salva
+      document.getElementById('login-pass').value = saved;
+      document.getElementById('login-remember').checked = true;
+      doLogin();
+    }
+  });
 
   // ═══════════════════════════════════════════════════════
   // ── Produtividade — Tabela de preenchimento por gerente ──
