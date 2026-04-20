@@ -1370,8 +1370,10 @@
     renderGerTable();
   }
   function atualizarSelectGerente() {
-    const ag  = document.getElementById('gg-agency').value;
-    const sel = document.getElementById('gg-gerente');
+    const agEl = document.getElementById('gg-agency');
+    const sel  = document.getElementById('gg-gerente');
+    if (!agEl || !sel) return; // aba GG não está ativa ainda
+    const ag = agEl.value;
     sel.innerHTML = '<option value="">— Selecione —</option>';
     if (!ag) return;
     gerentesDaAgencia(ag).forEach(g => {
@@ -1654,8 +1656,11 @@
   const SALDOS_KEY     = 'saldos_mensais_agencias';
 
   // ── Called after storage is loaded ──
+  // Variável global acessível por todas as funções
+  let today = new Date().toISOString().split('T')[0];
+
   function _initAppUI() {
-  const today = new Date().toISOString().split('T')[0];
+  today = new Date().toISOString().split('T')[0];
 
   document.getElementById('ref-date').value    = today;
   document.getElementById('painel-date').value = today;
