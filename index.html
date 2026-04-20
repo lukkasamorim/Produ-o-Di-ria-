@@ -301,6 +301,9 @@
   .btn-edit-cancel { background:#f0f2f7;color:#555;border:none;border-radius:7px;padding:9px 20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px; }
   .btn-edit-save-prod { background:#1a3a6e;color:#fff;border:none;border-radius:5px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;margin-right:4px; }
   .btn-edit-save-prod:hover { background:#15306a; }
+
+  .btn-novo-mes { background:#1a3a6e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px; }
+  .btn-novo-mes:hover { background:#15306a; }
 </style>
 </head>
 <body>
@@ -509,6 +512,7 @@
       </button>
       <button class="btn btn-secondary" onclick="clearForm()">Limpar</button>
       <button class="btn btn-secondary" onclick="abrirGerenciarDia()" style="color:#1a3a6e;border-color:#1a3a6e">📋 Gerenciar Prod. do Dia</button>
+      <button class="btn-novo-mes" onclick="novoMes()">📅 Novo Mês</button>
     </div>
   </div>
 
@@ -1746,18 +1750,30 @@
 
   function resetarMes(e) {
     if (e) e.preventDefault();
+    novoMes();
+  }
+
+  function novoMes() {
     const agency = document.getElementById('agency-select').value;
     if (!agency) { showToast('⚠️ Selecione a agência primeiro.', true); return; }
-    if (!confirm('Redefinir os valores iniciais de ' + agency + ' para o novo mês?\nOs campos de cima serão limpos.')) return;
-    // Remove saldos mensais da agência
-    let store = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
-    delete store[agency];
-    lsSetItem(SALDOS_KEY, JSON.stringify(store));
-    // Limpa campos de cima
+    if (!confirm(
+      '📅 Iniciar Novo Mês para ' + agency + '?\n\n' +
+      '• Os valores iniciais (Meta VOP, Desc., Quente, ARV, Liq.) serão limpos\n' +
+      '• Os lançamentos diários desta agência NÃO serão apagados\n\n' +
+      'Confirma?'
+    )) return;
+
+    // Remove saldos mensais apenas desta agência
+    let saldos = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
+    delete saldos[agency];
+    lsSetItem(SALDOS_KEY, JSON.stringify(saldos));
+
+    // Limpa campos de cima visualmente
     ['m-metaVop','m-descIni','m-quenteIni','m-arvIni','m-liqIni','m-netDiaAnt']
       .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+
     calcTudo();
-    showToast('✅ Pronto! Preencha os valores iniciais do novo mês.');
+    showToast('✅ Novo mês iniciado para ' + agency + '! Preencha os valores iniciais.');
   }
 
   function syncNomes() {
