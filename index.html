@@ -2687,18 +2687,30 @@
     if (!item) return;
     _editIdx = idx;
     const mes = document.getElementById('prod-mes').value;
+    const [y, m] = mes.split('-');
     document.getElementById('edit-prod-info').textContent =
-      `📅 ${mes} · 🏦 ${item.empresa} · 👤 ${item.gerente}`;
-    // Carrega os dados dos lançamentos individuais para edição
-    const prodStore = JSON.parse(lsGetItem(PROD_KEY) || '[]');
-    const rows = prodStore.filter(r =>
+      `📅 ${m}/${y} · 🏦 ${item.empresa} · 👤 ${item.gerente}`;
+
+    // Busca dados em AMBAS as chaves (PROD_KEY e STORE_KEY)
+    const prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
+    const diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+
+    const rowsProd = prodStore.filter(r =>
       r.agency === item.empresa && r.gerente === item.gerente && r.date && r.date.startsWith(mes)
     );
-    // Mostra soma atual nos campos
-    const totDesc = rows.reduce((s,r) => s + (Number(r.prodDesconto)||0), 0);
-    const totAnt  = rows.reduce((s,r) => s + (Number(r.antDemais)||0), 0);
-    const totLp   = rows.reduce((s,r) => s + (Number(r.longoPrazo)||0), 0);
-    const totLiq  = rows.reduce((s,r) => s + (Number(r.liquidacaoTotal)||0), 0);
+    const rowsDiar = diarStore.filter(r =>
+      r.agency === item.empresa &&
+      (r.gerente === item.gerente || (!r.gerente && r.agency === item.gerente)) &&
+      r.date && r.date.startsWith(mes)
+    );
+
+    // Soma tudo
+    const allRows = [...rowsProd, ...rowsDiar];
+    const totDesc = allRows.reduce((s,r) => s + (Number(r.prodDesconto)||0), 0);
+    const totAnt  = allRows.reduce((s,r) => s + (Number(r.antDemais)||0),    0);
+    const totLp   = allRows.reduce((s,r) => s + (Number(r.longoPrazo)||0),   0);
+    const totLiq  = allRows.reduce((s,r) => s + (Number(r.liquidacaoTotal)||0), 0);
+
     document.getElementById('edit-desc').value = totDesc || '';
     document.getElementById('edit-ant').value  = totAnt  || '';
     document.getElementById('edit-lp').value   = totLp   || '';
@@ -2735,19 +2747,29 @@
     const pipe = desc + ant + lp;
     const net  = pipe + liq;
 
-    // Remove todos os lançamentos antigos deste gerente/mês e insere um consolidado
-    let prodStore = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    // Remove lançamentos antigos de AMBAS as chaves
+    let prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
+    let diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+
     prodStore = prodStore.filter(r =>
       !(r.agency === item.empresa && r.gerente === item.gerente && r.date && r.date.startsWith(mes))
     );
-    // Insere novo registro consolidado com a data do primeiro dia do mês
+    diarStore = diarStore.filter(r =>
+      !(r.agency === item.empresa &&
+        (r.gerente === item.gerente || (!r.gerente && r.agency === item.gerente)) &&
+        r.date && r.date.startsWith(mes))
+    );
+
+    // Insere registro consolidado editado no PROD_KEY
     prodStore.push({
       agency: item.empresa, gerente: item.gerente,
       date: mes + '-01',
       prodDesconto: desc, antDemais: ant, longoPrazo: lp, liquidacaoTotal: liq,
       pipe, netProjetado: net
     });
-    lsSetItem(PROD_KEY, JSON.stringify(prodStore));
+
+    lsSetItem(PROD_KEY,  JSON.stringify(prodStore));
+    lsSetItem(STORE_KEY, JSON.stringify(diarStore));
     showToast('✅ Lançamento de ' + item.gerente + ' atualizado!');
     fecharEditProd();
     renderProdutividade();
