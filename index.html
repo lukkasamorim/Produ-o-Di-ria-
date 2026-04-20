@@ -286,6 +286,21 @@
   .db-status.syncing { background:rgba(234,179,8,0.2); color:#fbbf24; }
   .db-status.syncing .dot { background:#fbbf24; animation:pulse 1s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── MODAL EDITAR PRODUÇÃO ── */
+  .edit-modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000; }
+  .edit-modal-box { background:#fff;border-radius:12px;padding:24px 28px;width:500px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.2); }
+  .edit-modal-box h2 { font-size:14px;font-weight:700;color:#1a3a6e;margin-bottom:16px; }
+  .edit-field { margin-bottom:12px; }
+  .edit-field label { display:block;font-size:11px;font-weight:600;color:#555;margin-bottom:4px; }
+  .edit-field input { width:100%;border:1px solid #d0d5e0;border-radius:6px;padding:7px 10px;font-size:13px;text-align:right;outline:none; }
+  .edit-field input:focus { border-color:#1a3a6e; }
+  .edit-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
+  .btn-edit-save { background:#0d7a5f;color:#fff;border:none;border-radius:7px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer; }
+  .btn-edit-save:hover { background:#0a6350; }
+  .btn-edit-cancel { background:#f0f2f7;color:#555;border:none;border-radius:7px;padding:9px 20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px; }
+  .btn-edit-save-prod { background:#1a3a6e;color:#fff;border:none;border-radius:5px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;margin-right:4px; }
+  .btn-edit-save-prod:hover { background:#15306a; }
 </style>
 </head>
 <body>
@@ -1142,16 +1157,20 @@
     // Tabela detalhada — usar índice global para evitar problemas de escopo
     window._delItems = items.map(i => ({ empresa: i.empresa, gerente: i.gerente, mes: mes }));
 
+    // Armazena items completos para edição
+    window._editItems = items.map(i => ({ ...i }));
     document.getElementById('tbody-prod').innerHTML = items.map((item, idx) => {
       const nc = item.netProj >= 0 ? 'pos' : 'neg';
-      return `<tr>
+      return `<tr id="prod-row-${idx}">
         <td class="ag">${item.empresa}</td>
         <td>${item.gerente}</td>
         <td style="text-align:right;font-weight:600">${fmtBRL(item.pipe)}</td>
         <td style="text-align:right">${fmtBRL(item.liq)}</td>
         <td class="${nc}" style="text-align:right;font-weight:700">${fmtBRL(item.netProj)}</td>
         <td style="text-align:center;font-size:11px;color:#888">${item.diasCount||0}d</td>
-        <td style="text-align:center">
+        <td style="text-align:center;white-space:nowrap">
+          <button class="btn-edit-save-prod" onclick="abrirEditProd(${idx})"
+            title="Editar lançamentos de ${item.gerente}">✏️</button>
           <button class="btn-limpar-ger" onclick="excluirProdGerente(${idx})"
             title="Excluir produção de ${item.gerente}">🗑</button>
         </td>
@@ -1310,9 +1329,17 @@
     prodStore = prodStore.filter(r => r.date && !r.date.startsWith(mes));
     lsSetItem(PROD_KEY, JSON.stringify(prodStore));
 
+    // Limpa também os saldos mensais de todas as agências
+    lsSetItem(SALDOS_KEY, JSON.stringify({}));
+
     showToast('🗑 Todos os dados do mês apagados.');
     renderProdutividade();
     renderDiario();
+
+    // Limpa campos de cima na aba Lançar Produção
+    ['m-metaVop','m-descIni','m-quenteIni','m-arvIni','m-liqIni','m-netDiaAnt']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    calcTudo();
 
     // Atualiza a tabela de input se agência estiver selecionada
     const agSel = document.getElementById('prod-agency');
@@ -2635,6 +2662,87 @@
     // Quartis
   }
 
+
+  // ── Editar lançamento de produção por gerente ──
+  let _editIdx = null;
+
+  function abrirEditProd(idx) {
+    const item = window._editItems && window._editItems[idx];
+    if (!item) return;
+    _editIdx = idx;
+    const mes = document.getElementById('prod-mes').value;
+    document.getElementById('edit-prod-info').textContent =
+      `📅 ${mes} · 🏦 ${item.empresa} · 👤 ${item.gerente}`;
+    // Carrega os dados dos lançamentos individuais para edição
+    const prodStore = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    const rows = prodStore.filter(r =>
+      r.agency === item.empresa && r.gerente === item.gerente && r.date && r.date.startsWith(mes)
+    );
+    // Mostra soma atual nos campos
+    const totDesc = rows.reduce((s,r) => s + (Number(r.prodDesconto)||0), 0);
+    const totAnt  = rows.reduce((s,r) => s + (Number(r.antDemais)||0), 0);
+    const totLp   = rows.reduce((s,r) => s + (Number(r.longoPrazo)||0), 0);
+    const totLiq  = rows.reduce((s,r) => s + (Number(r.liquidacaoTotal)||0), 0);
+    document.getElementById('edit-desc').value = totDesc || '';
+    document.getElementById('edit-ant').value  = totAnt  || '';
+    document.getElementById('edit-lp').value   = totLp   || '';
+    document.getElementById('edit-liq').value  = totLiq  || '';
+    calcEditProd();
+    document.getElementById('edit-prod-modal').style.display = 'flex';
+  }
+
+  function calcEditProd() {
+    const desc = parseFloat(document.getElementById('edit-desc').value)||0;
+    const ant  = parseFloat(document.getElementById('edit-ant').value) ||0;
+    const lp   = parseFloat(document.getElementById('edit-lp').value)  ||0;
+    const liq  = parseFloat(document.getElementById('edit-liq').value) ||0;
+    const pipe = desc + ant + lp;
+    const net  = pipe + liq;
+    document.getElementById('edit-calc-pipe').textContent = fmtBRL(pipe);
+    document.getElementById('edit-calc-net').textContent  = fmtBRL(net);
+    document.getElementById('edit-calc-net').style.color  = net >= 0 ? '#0d7a5f' : '#b92d2d';
+  }
+
+  function fecharEditProd() {
+    document.getElementById('edit-prod-modal').style.display = 'none';
+    _editIdx = null;
+  }
+
+  function salvarEdicaoProd() {
+    const item = window._editItems && window._editItems[_editIdx];
+    if (!item) return;
+    const mes  = document.getElementById('prod-mes').value;
+    const desc = parseFloat(document.getElementById('edit-desc').value)||0;
+    const ant  = parseFloat(document.getElementById('edit-ant').value) ||0;
+    const lp   = parseFloat(document.getElementById('edit-lp').value)  ||0;
+    const liq  = parseFloat(document.getElementById('edit-liq').value) ||0;
+    const pipe = desc + ant + lp;
+    const net  = pipe + liq;
+
+    // Remove todos os lançamentos antigos deste gerente/mês e insere um consolidado
+    let prodStore = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    prodStore = prodStore.filter(r =>
+      !(r.agency === item.empresa && r.gerente === item.gerente && r.date && r.date.startsWith(mes))
+    );
+    // Insere novo registro consolidado com a data do primeiro dia do mês
+    prodStore.push({
+      agency: item.empresa, gerente: item.gerente,
+      date: mes + '-01',
+      prodDesconto: desc, antDemais: ant, longoPrazo: lp, liquidacaoTotal: liq,
+      pipe, netProjetado: net
+    });
+    lsSetItem(PROD_KEY, JSON.stringify(prodStore));
+    showToast('✅ Lançamento de ' + item.gerente + ' atualizado!');
+    fecharEditProd();
+    renderProdutividade();
+  }
+
+  // Adiciona listeners de cálculo ao modal de edição
+  ['edit-desc','edit-ant','edit-lp','edit-liq'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', calcEditProd);
+  });
+
   function showToast(msg, isError) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -2642,5 +2750,39 @@
     setTimeout(() => { t.className = 'toast'; }, 4000);
   }
 </script>
+
+<!-- Modal Editar Lançamento Gerente -->
+<div class="edit-modal-overlay" id="edit-prod-modal" style="display:none">
+  <div class="edit-modal-box">
+    <h2>✏️ Editar Lançamento</h2>
+    <div style="font-size:12px;color:#888;margin-bottom:14px" id="edit-prod-info"></div>
+    <div class="edit-grid">
+      <div class="edit-field">
+        <label>Prod. Desconto</label>
+        <input type="number" id="edit-desc" placeholder="0">
+      </div>
+      <div class="edit-field">
+        <label>Ant / Demais</label>
+        <input type="number" id="edit-ant" placeholder="0">
+      </div>
+      <div class="edit-field">
+        <label>Longo Prazo</label>
+        <input type="number" id="edit-lp" placeholder="0">
+      </div>
+      <div class="edit-field">
+        <label>Liquidação</label>
+        <input type="number" id="edit-liq" placeholder="0">
+      </div>
+    </div>
+    <div style="margin-top:6px;padding:8px 12px;background:#f0f4ff;border-radius:6px;font-size:12px;color:#1a3a6e">
+      Produção ⚡ <strong id="edit-calc-pipe">R$ 0</strong> &nbsp;|&nbsp; Net Projetado ⚡ <strong id="edit-calc-net">R$ 0</strong>
+    </div>
+    <div style="text-align:right;margin-top:16px">
+      <button class="btn-edit-save" onclick="salvarEdicaoProd()">✔ Salvar</button>
+      <button class="btn-edit-cancel" onclick="fecharEditProd()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
