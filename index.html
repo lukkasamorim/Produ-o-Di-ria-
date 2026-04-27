@@ -20,6 +20,44 @@
   .dash-card .dc-val   { font-size: 14px; font-weight: 700; line-height: 1.2; }
   .dash-card .dc-sub   { font-size: 9px; opacity: 0.7; margin-top: 1px; }
 
+  /* Quartil barras */
+  .q-bar-wrap { display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:60px; }
+  .q-bar { border-radius:4px 4px 0 0;width:100%;min-height:4px;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;transition:height 0.5s; }
+  .q-bar span { font-size:12px;font-weight:700;color:#fff; }
+  .q-bar.q1 { background:#1a3a6e; }
+  .q-bar.q2 { background:#0d7a5f; }
+  .q-bar.q3 { background:#e67e22; }
+  .q-bar.q4 { background:#b92d2d; }
+  .q-bar-lbl { font-size:10px;font-weight:700;color:#555; }
+  .q-corte-table { width:100%;border-collapse:collapse;font-size:10px;background:#f5f7fb;border-radius:6px;overflow:hidden; }
+  .q-corte-table th { padding:4px 8px;text-align:center;font-weight:700; }
+  .q-corte-table td { padding:4px 8px;text-align:center;border-top:1px solid #e8eaf0; }
+
+  /* Cards de agência com relógio */
+  .ag-cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; margin-bottom:12px; }
+  .ag-card { background:#fff; border:1px solid #e0e4ec; border-radius:10px; padding:10px 12px; position:relative; overflow:hidden; min-width:0; }
+  .ag-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:#e0e4ec; }
+  .ag-card.q1-ag::before { background:#1a3a6e; }
+  .ag-card.q2-ag::before { background:#0d7a5f; }
+  .ag-card.q3-ag::before { background:#e67e22; }
+  .ag-card.q4-ag::before { background:#b92d2d; }
+  .ag-card .ag-nome { font-size:11px; font-weight:700; color:#1a3a6e; margin-bottom:8px; }
+  .ag-clock-wrap { position:relative; width:60px; height:60px; margin:0 auto 6px; }
+  .ag-clock-wrap svg { width:60px; height:60px; transform:rotate(-90deg); }
+  .ag-clock-bg  { fill:none; stroke:#f0f2f7; stroke-width:5; }
+  .ag-clock-arc { fill:none; stroke-width:5; stroke-linecap:round; transition:stroke-dashoffset 0.6s; }
+  .ag-clock-text { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ag-clock-pct  { font-size:12px; font-weight:700; color:#1a3a6e; }
+  .ag-clock-lbl  { font-size:8px; color:#888; }
+  .ag-vop-val  { font-size:12px; font-weight:700; color:#1a3a6e; text-align:center; }
+  .ag-meta-val { font-size:10px; color:#888; text-align:center; margin-bottom:4px; }
+  .ag-badge    { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; text-align:center; display:inline-block; }
+  .ag-q1 { background:#e8edf7; color:#1a3a6e; }
+  .ag-q2 { background:#e0f5ee; color:#0d7a5f; }
+  .ag-q3 { background:#fef3e2; color:#e67e22; }
+  .ag-q4 { background:#fde8e8; color:#b92d2d; }
+  .ag-pendente { opacity:0.45; }
+
   /* Relógio VOP */
   .vop-clock-wrap { position: relative; width: 70px; height: 70px; flex-shrink: 0; }
   .vop-clock-wrap svg { width: 70px; height: 70px; transform: rotate(-90deg); }
@@ -78,13 +116,18 @@
   tbody td.ag       { text-align: left; font-weight: 600; color: #1a3a6e; background: #f5f7fb; white-space: nowrap; min-width: 90px; }
   tbody td.auto-val { background: #eef4fb; font-style: italic; color: #444; font-weight: 600; }
   tbody td.saldo    { font-weight: 700; }
-  tbody td.net-dia  { background: #e8f5f0; font-weight: 700; font-size: 11px; }
+  tbody td.net-dia  { font-weight: 700; font-size: 11px; }
+  tbody td.net-dia.pos { background: #e8f5f0; color: #0d7a5f; }
+  tbody td.net-dia.neg { background: #fde8e8; color: #b92d2d; }
   tbody td.net-acum { background: #dff0e8; font-weight: 700; font-size: 11px; }
   tbody td.net-proj { background: #e8f5f0; font-weight: 700; font-size: 11px; }
+  tbody td.pos { color: #0d7a5f; font-weight: 700; }
+  tbody td.neg { color: #b92d2d; font-weight: 700; background: #fff5f5; }
   tbody tr:hover td          { background: #f2f5fb; }
   tbody tr:hover td.ag       { background: #e8edf8; }
   tbody tr:hover td.auto-val { background: #e4eef8; }
-  tbody tr:hover td.net-dia  { background: #d8eee6; }
+  tbody tr:hover td.net-dia.pos { background: #d8eee6; }
+  tbody tr:hover td.net-dia.neg { background: #fbd0d0; }
   tbody tr:hover td.net-acum { background: #cce8da; }
 
   tr.reg td { background: #1a3a6e !important; color: #fff !important; font-weight: 700; border-color: #15306a !important; }
@@ -261,132 +304,17 @@
   .prod-input { width:100%;border:1px solid #d0d5e0;border-radius:4px;padding:5px 7px;font-size:11px;text-align:right;background:#fafbfd;color:#1a1a2e;outline:none;min-width:80px; }
   .prod-input:focus { border-color:#1a3a6e;box-shadow:0 0 0 2px rgba(26,58,110,0.1); }
   .prod-calc { font-weight:700;font-size:11px;text-align:right;padding:6px 8px; }
-  .prod-calc.pos { color:#0d7a5f; }
-  .prod-calc.neg { color:#b92d2d; }
+  .prod-calc.pos { color:#0d7a5f; font-weight:700; }
+  .prod-calc.neg { color:#b92d2d; font-weight:700; background:#fff5f5; border-radius:4px; }
   .btn-salvar-ger { background:#1a3a6e;color:#fff;border:none;border-radius:5px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap; }
   .btn-salvar-ger:hover { background:#15306a; }
   .btn-limpar-ger { background:#fff;color:#888;border:1px solid #d0d5e0;border-radius:5px;padding:5px 8px;font-size:11px;cursor:pointer; }
   .btn-limpar-ger:hover { background:#f4f6f9; }
   .prod-row-saved { background:#f0fbf7; }
   .prod-row-saved td { color:#0d7a5f; }
-
-  /* ── LOADING OVERLAY ── */
-  #loading-overlay { position:fixed;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;z-index:9998; }
-  .loading-box { text-align:center; }
-  .loading-box .ld-spinner { width:40px;height:40px;border:4px solid #e0e4ec;border-top-color:#1a3a6e;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 12px; }
-  .loading-box .ld-text { font-size:13px;color:#555;font-weight:600; }
-
-  /* ── STATUS CONEXÃO ── */
-  .db-status { display:flex; align-items:center; gap:6px; padding:4px 10px; border-radius:20px; font-size:10px; font-weight:700; border:1px solid rgba(255,255,255,0.2); cursor:default; }
-  .db-status .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-  .db-status.online  { background:rgba(13,122,95,0.25); color:#4ade80; }
-  .db-status.online .dot  { background:#4ade80; box-shadow:0 0 6px #4ade80; }
-  .db-status.offline { background:rgba(185,45,45,0.25); color:#f87171; }
-  .db-status.offline .dot { background:#f87171; box-shadow:0 0 6px #f87171; }
-  .db-status.syncing { background:rgba(234,179,8,0.2); color:#fbbf24; }
-  .db-status.syncing .dot { background:#fbbf24; animation:pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  /* ── MODAL EDITAR PRODUÇÃO ── */
-  .edit-modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000; }
-  .edit-modal-box { background:#fff;border-radius:12px;padding:24px 28px;width:500px;max-width:95vw;box-shadow:0 8px 32px rgba(0,0,0,0.2); }
-  .edit-modal-box h2 { font-size:14px;font-weight:700;color:#1a3a6e;margin-bottom:16px; }
-  .edit-field { margin-bottom:12px; }
-  .edit-field label { display:block;font-size:11px;font-weight:600;color:#555;margin-bottom:4px; }
-  .edit-field input { width:100%;border:1px solid #d0d5e0;border-radius:6px;padding:7px 10px;font-size:13px;text-align:right;outline:none; }
-  .edit-field input:focus { border-color:#1a3a6e; }
-  .edit-grid { display:grid;grid-template-columns:1fr 1fr;gap:10px; }
-  .btn-edit-save { background:#0d7a5f;color:#fff;border:none;border-radius:7px;padding:9px 20px;font-size:12px;font-weight:700;cursor:pointer; }
-  .btn-edit-save:hover { background:#0a6350; }
-  .btn-edit-cancel { background:#f0f2f7;color:#555;border:none;border-radius:7px;padding:9px 20px;font-size:12px;font-weight:600;cursor:pointer;margin-left:8px; }
-  .btn-edit-save-prod { background:#1a3a6e;color:#fff;border:none;border-radius:5px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;margin-right:4px; }
-  .btn-edit-save-prod:hover { background:#15306a; }
-
-  .btn-novo-mes { background:#1a3a6e;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px; }
-  .btn-novo-mes:hover { background:#15306a; }
-
-  /* ── LOGIN SCREEN ── */
-  #login-screen { position:fixed;inset:0;background:linear-gradient(135deg,#1a3a6e 0%,#0d2550 100%);display:flex;align-items:center;justify-content:center;z-index:99999; }
-  .login-box { background:#fff;border-radius:16px;padding:36px 40px;width:380px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center; }
-  .login-logo { font-size:40px;margin-bottom:8px; }
-  .login-title { font-size:18px;font-weight:700;color:#1a3a6e;margin-bottom:4px; }
-  .login-sub { font-size:12px;color:#888;margin-bottom:24px; }
-  .login-pass-wrap { position:relative;margin-bottom:14px; }
-  .login-pass-wrap input { width:100%;padding:11px 42px 11px 14px;border:1.5px solid #d0d5e0;border-radius:8px;font-size:14px;outline:none;color:#1a1a2e;transition:border-color 0.2s;box-sizing:border-box; }
-  .login-pass-wrap input:focus { border-color:#1a3a6e; }
-  .login-eye { position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px;color:#888;user-select:none;background:none;border:none;padding:0; }
-  .login-eye:hover { color:#1a3a6e; }
-  .login-remember { display:flex;align-items:center;gap:8px;margin-bottom:18px;justify-content:flex-start; }
-  .login-remember input[type=checkbox] { width:16px;height:16px;accent-color:#1a3a6e;cursor:pointer;flex-shrink:0; }
-  .login-remember label { font-size:12px;color:#555;cursor:pointer; }
-  .login-btn { width:100%;padding:12px;background:#1a3a6e;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s; }
-  .login-btn:hover { background:#15306a; }
-  .login-btn:disabled { opacity:0.6;cursor:not-allowed; }
-  .login-err { color:#b92d2d;font-size:12px;margin-top:10px;min-height:18px;font-weight:600; }
-  .login-loading { font-size:12px;color:#888;margin-top:8px;min-height:18px; }
-
-  /* ── Cards de agência com relógio (Painel Regional) ── */
-  .q-bar-wrap { display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:60px; }
-  .q-bar { border-radius:4px 4px 0 0;width:100%;min-height:4px;display:flex;align-items:flex-start;justify-content:center;padding-top:4px;transition:height 0.5s; }
-  .q-bar span { font-size:12px;font-weight:700;color:#fff; }
-  .q-bar.q1 { background:#1a3a6e; }
-  .q-bar.q2 { background:#0d7a5f; }
-  .q-bar.q3 { background:#e67e22; }
-  .q-bar.q4 { background:#b92d2d; }
-  .q-bar-lbl { font-size:10px;font-weight:700;color:#555; }
-  .q-corte-table { width:100%;border-collapse:collapse;font-size:10px;background:#f5f7fb;border-radius:6px;overflow:hidden; }
-  .q-corte-table th { padding:4px 8px;text-align:center;font-weight:700; }
-  .q-corte-table td { padding:4px 8px;text-align:center;border-top:1px solid #e8eaf0; }
-  .ag-cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:8px; margin-bottom:12px; }
-  .ag-card { background:#fff; border:1px solid #e0e4ec; border-radius:10px; padding:10px 12px; position:relative; overflow:hidden; min-width:0; }
-  .ag-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:#e0e4ec; }
-  .ag-card.q1-ag::before { background:#1a3a6e; }
-  .ag-card.q2-ag::before { background:#0d7a5f; }
-  .ag-card.q3-ag::before { background:#e67e22; }
-  .ag-card.q4-ag::before { background:#b92d2d; }
-  .ag-card .ag-nome { font-size:11px; font-weight:700; color:#1a3a6e; margin-bottom:8px; }
-  .ag-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; text-align:center; display:inline-block; }
-  .ag-q1 { background:#e8edf7; color:#1a3a6e; }
-  .ag-q2 { background:#e0f5ee; color:#0d7a5f; }
-  .ag-q3 { background:#fef3e2; color:#e67e22; }
-  .ag-q4 { background:#fde8e8; color:#b92d2d; }
-  .ag-pendente { opacity:0.45; }
-  /* Botão Novo Mês laranja */
-  .btn-novo-mes-header { background:#e67e22;color:#fff;border:1px solid #e67e22;border-radius:6px;padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer; }
-  .btn-novo-mes-header:hover { background:#cf6d17; }
 </style>
 </head>
 <body>
-
-
-<!-- ── LOGIN SCREEN ── -->
-<div id="login-screen" style="display:flex">
-  <div class="login-box">
-    <div class="login-logo">📊</div>
-    <div class="login-title">Produção Diária — Agências</div>
-    <div class="login-sub">Banco Safra · Acesso restrito</div>
-    <div class="login-pass-wrap">
-      <input type="password" id="login-pass" placeholder="Digite sua senha"
-        onkeydown="if(event.key==='Enter')doLogin()">
-      <button class="login-eye" id="login-eye" onclick="toggleSenha()" title="Mostrar/ocultar senha">👁</button>
-    </div>
-    <div class="login-remember">
-      <input type="checkbox" id="login-remember" onchange="onRememberChange()">
-      <label for="login-remember">Lembrar senha neste dispositivo</label>
-    </div>
-    <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar</button>
-    <div class="login-err" id="login-err"></div>
-    <div class="login-loading" id="login-loading"></div>
-  </div>
-</div>
-
-<!-- ── LOADING OVERLAY ── -->
-<div id="loading-overlay" style="display:flex">
-  <div class="loading-box">
-    <div class="ld-spinner"></div>
-    <div class="ld-text" id="loading-text">Carregando dados...</div>
-  </div>
-</div>
 
 <div class="header">
   <div>
@@ -395,44 +323,48 @@
   </div>
 
   <div class="dash">
-    <!-- Relógio VOP Realizado -->
-    <div style="display:flex;align-items:center;gap:6px">
-      <div class="vop-clock-wrap">
-        <svg viewBox="0 0 36 36">
-          <circle class="vop-clock-bg" cx="18" cy="18" r="15.9"/>
-          <circle class="vop-clock-arc" id="vop-arc" cx="18" cy="18" r="15.9"
-            stroke-dasharray="100 100" stroke-dashoffset="100"/>
-        </svg>
-        <div class="vop-clock-text">
-          <span class="vop-clock-pct" id="vop-clock-pct">0%</span>
-          <span class="vop-clock-lbl">VOP</span>
+    <!-- Relógio VOP -->
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <!-- Relógio 1: VOP realizado vs meta -->
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="vop-clock-wrap">
+          <svg viewBox="0 0 36 36">
+            <circle class="vop-clock-bg" cx="18" cy="18" r="15.9"/>
+            <circle class="vop-clock-arc" id="vop-arc" cx="18" cy="18" r="15.9"
+              stroke-dasharray="100 100" stroke-dashoffset="100"/>
+          </svg>
+          <div class="vop-clock-text">
+            <span class="vop-clock-pct" id="vop-clock-pct">0%</span>
+            <span class="vop-clock-lbl">VOP</span>
+          </div>
+        </div>
+        <div class="dash-card" style="min-width:90px;text-align:left;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)">
+          <div class="dc-label">VOP Acum. Mês</div>
+          <div class="dc-val" id="dash-real">R$ 0</div>
+          <div class="dc-sub">meta <span id="dash-meta">R$ 0</span></div>
         </div>
       </div>
-      <div class="dash-card" style="min-width:90px;text-align:left;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)">
-        <div class="dc-label">VOP Acum. Mês</div>
-        <div class="dc-val" id="dash-real">R$ 0</div>
-        <div class="dc-sub">meta <span id="dash-meta">R$ 0</span></div>
-      </div>
-    </div>
-    <!-- Relógio Projeção -->
-    <div style="display:flex;align-items:center;gap:6px">
-      <div class="vop-clock-wrap">
-        <svg viewBox="0 0 36 36">
-          <circle class="vop-clock-bg" cx="18" cy="18" r="15.9"/>
-          <circle class="vop-clock-arc" id="proj-arc" cx="18" cy="18" r="15.9"
-            stroke-dasharray="100 100" stroke-dashoffset="100" style="stroke:#facc15"/>
-        </svg>
-        <div class="vop-clock-text">
-          <span class="vop-clock-pct" id="proj-clock-pct" style="color:#facc15">0%</span>
-          <span class="vop-clock-lbl">Proj</span>
+      <!-- Relógio 2: Projeção (onde deveria estar no dia de hoje) -->
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="vop-clock-wrap">
+          <svg viewBox="0 0 36 36">
+            <circle class="vop-clock-bg" cx="18" cy="18" r="15.9"/>
+            <circle class="vop-clock-arc" id="proj-arc" cx="18" cy="18" r="15.9"
+              stroke-dasharray="100 100" stroke-dashoffset="100" style="stroke:#facc15"/>
+          </svg>
+          <div class="vop-clock-text">
+            <span class="vop-clock-pct" id="proj-clock-pct" style="color:#facc15">0%</span>
+            <span class="vop-clock-lbl">Proj</span>
+          </div>
+        </div>
+        <div class="dash-card" style="min-width:90px;text-align:left;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)">
+          <div class="dc-label">Meta até hoje</div>
+          <div class="dc-val" id="dash-meta-hoje" style="color:#facc15">R$ 0</div>
+          <div class="dc-sub" id="dash-proj-sub">dia 0 de 0</div>
         </div>
       </div>
-      <div class="dash-card" style="min-width:90px;text-align:left;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.15)">
-        <div class="dc-label">Meta até hoje</div>
-        <div class="dc-val" id="dash-meta-hoje" style="color:#facc15">R$ 0</div>
-        <div class="dc-sub" id="dash-proj-sub">dia 0 de 0</div>
-      </div>
     </div>
+
     <!-- Cards resumo -->
     <div class="dash-card">
       <div class="dc-label">Net Dia</div>
@@ -454,12 +386,8 @@
       <div class="dc-val" id="dash-netproj">R$ 0</div>
       <div class="dc-sub" id="dash-netproj-sub">regional</div>
     </div>
-    <button class="btn-novo-mes-header" onclick="abrirNovoMes()">📅 Novo Mês</button>
+    <button class="btn-gerentes" onclick="abrirNovoMes()" style="background:#e67e22;border-color:#e67e22">📅 Novo Mês</button>
     <button class="btn-gerentes" onclick="abrirGerentes()">👥 Gerenciar Gerentes</button>
-    <div class="db-status syncing" id="db-status-indicator">
-      <div class="dot"></div>
-      <span id="db-status-text">Conectando...</span>
-    </div>
   </div>
 </div>
 
@@ -493,7 +421,7 @@
         <option>JK</option><option>Itaim</option><option>Sumaré</option>
       </select>
       <label>Data:</label>
-      <input type="date" id="ref-date" onchange="atualizarDashTotal(this.value)">
+      <input type="date" id="ref-date" onchange="atualizarDashTotal(this.value);atualizarPainelGerentes();atualizarCamposComGerentes()">
     </div>
   </div>
 
@@ -605,7 +533,35 @@
       </button>
       <button class="btn btn-secondary" onclick="clearForm()">Limpar</button>
       <button class="btn btn-secondary" onclick="abrirGerenciarDia()" style="color:#1a3a6e;border-color:#1a3a6e">📋 Gerenciar Prod. do Dia</button>
-      <button class="btn-novo-mes" onclick="novoMes()">📅 Novo Mês</button>
+    </div>
+  </div>
+
+  <!-- Gerentes da agência selecionada -->
+  <div id="painel-gerentes-lancar" style="display:none">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">👥 Gerentes — <span id="pg-agencia-nome">—</span> — <span id="pg-data-nome">—</span></div>
+      <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="left th-ag">Gerente</th>
+            <th class="th-day">Prod. Desc.</th>
+            <th class="th-day">Ant/Demais</th>
+            <th class="th-day">Longo Prazo</th>
+            <th class="th-day">Liquidação</th>
+            <th class="th-calc">VOP ⚡</th>
+            <th class="th-net">Net ⚡</th>
+            <th class="th-ag">Ação</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-gerentes-lancar">
+          <tr><td colspan="7" style="text-align:center;color:#aaa;padding:12px">Sem lançamentos hoje</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div id="pg-total" style="display:none;font-size:11px;color:#1a3a6e;font-weight:700;padding:8px 12px;background:#f5f7fb;border-radius:0 0 8px 8px">
+        Total: <span id="pg-total-vop">R$ 0</span> VOP &nbsp;|&nbsp; Net: <span id="pg-total-net">R$ 0</span>
+      </div>
     </div>
   </div>
 
@@ -625,106 +581,12 @@
   <!-- Mini-dash: Net Projetado por agência -->
   <div id="mini-dash-netproj" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px"></div>
 
-  <!-- ── SEÇÃO 1: PREENCHIMENTO DIÁRIO POR GERENTE ── -->
-  <div class="card">
-    <div class="card-title">
-      ✏️ Lançamento Diário por Gerente
-      <span class="pill pill-green">Cada gerente preenche sua linha</span>
-    </div>
-
-    <div class="field-row" style="margin-bottom:12px">
-      <label>Agência:</label>
-      <select id="prod-agency" onchange="renderGerentesAgencia()">
-        <option value="">— Selecione a agência —</option>
-        <option>Alphaville</option><option>Lapa</option><option>Osasco</option>
-        <option>Santana</option><option>Vila Maria</option><option>Sorocaba</option>
-        <option>Tatuape</option><option>Cidade Jardim</option><option>Santo Amaro</option>
-        <option>JK</option><option>Itaim</option><option>Sumaré</option>
-      </select>
-      <label>Data:</label>
-      <input type="date" id="prod-data">
-      <button class="btn btn-secondary btn-sm" onclick="renderGerentesAgencia()">↻ Atualizar</button>
-    </div>
-
-    <!-- Tabela de gerentes para preenchimento -->
-    <div class="tbl-wrap">
-    <table id="prod-input-table">
-      <thead>
-        <tr>
-          <th class="left th-ag" style="min-width:150px">Gerente</th>
-          <th class="th-day">Prod. Desconto</th>
-          <th class="th-day">Ant / Demais</th>
-          <th class="th-day">Longo Prazo</th>
-          <th class="th-day">Liquidação</th>
-          <th class="th-calc">Produção ⚡<br><small style="font-size:9px;font-weight:400">Desc+Ant+LP</small></th>
-          <th class="th-net">Net Projetado ⚡<br><small style="font-size:9px;font-weight:400">Prod−Liq</small></th>
-          <th class="th-ag">Ação</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-prod-input">
-        <tr><td colspan="8" style="text-align:center;color:#aaa;padding:16px">Selecione a agência para ver os gerentes</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-
-  <!-- ── SEÇÃO 2: CONSOLIDADO MENSAL ── -->
-  <div class="card">
-    <div class="card-title">Período — Consolidado Mensal</div>
-    <div class="field-row">
-      <label>Mês/Ano:</label>
-      <input type="month" id="prod-mes" onchange="renderProdutividade()">
-      <button class="btn btn-secondary btn-sm" onclick="renderProdutividade()">↻ Atualizar</button>
-      <button class="btn-limpar-gg" onclick="limparProdMes()" style="color:#b92d2d;border-color:#f0c0c0">🗑 Limpar mês</button>
-    </div>
-  </div>
-
-  <!-- Totalizador -->
-  <div class="retorno-total" id="prod-total" style="display:none;margin-bottom:12px">
-    <div class="rt-item"><div class="rt-label">Produção Total</div><div class="rt-val" id="prod-pipe-total" style="color:#185FA5">R$ 0</div></div>
-    <div class="rt-item"><div class="rt-label">Liquidação Total</div><div class="rt-val" id="prod-liq-total">R$ 0</div></div>
-    <div class="rt-item"><div class="rt-label">Net Projetado</div><div class="rt-val" id="prod-net-total" style="color:#0d7a5f">R$ 0</div></div>
-    <div class="rt-item"><div class="rt-label">Gerentes</div><div class="rt-val" id="prod-ag-count" style="color:#185FA5">0</div></div>
-    <div class="rt-item"><div class="rt-label">Dias lançados</div><div class="rt-val" id="prod-dias-count" style="color:#185FA5">0</div></div>
-  </div>
-
-  <!-- Cards pipe -->
-  <div class="card">
-    <div class="card-title">💼 Produção por Gerente — acumulado do mês</div>
-    <div class="pipe-grid" id="prod-pipe-grid">
-      <div style="color:#aaa;font-size:11px;padding:8px">Selecione o mês para ver</div>
-    </div>
-  </div>
-
-  <!-- Tabela detalhada mensal -->
-  <div class="card">
-    <div class="card-title">📋 Detalhamento Mensal por Agência e Gerente</div>
-    <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th class="left th-ag" style="min-width:120px">Agência</th>
-          <th class="th-ag">Gerente</th>
-          <th class="th-acum">Produção Acum.</th>
-          <th class="th-deduz">Liquidação Acum.</th>
-          <th class="th-net">Net Projetado ⚡</th>
-          <th class="th-ag">Dias</th>
-          <th class="th-ag">Ação</th>
-        </tr>
-      </thead>
-      <tbody id="tbody-prod">
-        <tr><td colspan="7" style="text-align:center;color:#aaa;padding:14px">Selecione o mês</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-
   <!-- ── SEÇÃO 3: PRODUÇÃO DIÁRIA DETALHADA ── -->
   <div class="card">
     <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
       <span>📅 Produção Diária — Histórico por Agência</span>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select id="diario-filtro-ag" onchange="renderDiario()" style="padding:5px 8px;border:1px solid #d0d5e0;border-radius:6px;font-size:12px">
+        <select id="diario-filtro-ag" onchange="sincronizarAgencia(this.value)" style="padding:5px 8px;border:1px solid #d0d5e0;border-radius:6px;font-size:12px">
           <option value="">Todas as agências</option>
           <option>Alphaville</option><option>Lapa</option><option>Osasco</option>
           <option>Santana</option><option>Vila Maria</option><option>Sorocaba</option>
@@ -743,21 +605,123 @@
         <tr>
           <th class="left th-ag" style="min-width:80px">Data</th>
           <th class="th-ag">Agência</th>
-          <th class="th-ag">Gerente</th>
           <th class="th-day">Prod. Desc.</th>
           <th class="th-day">Ant/Demais</th>
           <th class="th-day">Longo Prazo</th>
           <th class="th-day">Liquidação</th>
           <th class="th-calc">Produção ⚡</th>
           <th class="th-net">Net Dia ⚡</th>
+          <th class="th-ag">✏️</th>
         </tr>
       </thead>
       <tbody id="tbody-diario-prod">
-        <tr><td colspan="9" style="text-align:center;color:#aaa;padding:14px">Selecione o mês para ver</td></tr>
+        <tr><td colspan="9" style="text-align:center;color:#aaa;padding:14px">Selecione uma agência para ver o histórico</td></tr>
       </tbody>
     </table>
     </div>
   </div>
+
+  <!-- ── SEÇÃO 1: PREENCHIMENTO DIÁRIO POR GERENTE ── -->
+  <div class="card">
+    <div class="card-title">
+      ✏️ Lançamento Diário por Gerente
+      <span class="pill pill-green">Cada gerente preenche sua linha</span>
+    </div>
+
+    <select id="prod-agency" style="display:none">
+      <option value="">— Selecione —</option>
+      <option>Alphaville</option><option>Lapa</option><option>Osasco</option>
+      <option>Santana</option><option>Vila Maria</option><option>Sorocaba</option>
+      <option>Tatuape</option><option>Cidade Jardim</option><option>Santo Amaro</option>
+      <option>JK</option><option>Itaim</option><option>Sumaré</option>
+    </select>
+    <div class="field-row" style="margin-bottom:12px">
+      <label>Data:</label>
+      <input type="date" id="prod-data">
+      <button class="btn btn-secondary btn-sm" onclick="renderGerentesAgencia()">↻ Atualizar</button>
+    </div>
+
+    <!-- Tabela de gerentes para preenchimento -->
+    <div class="tbl-wrap">
+    <table id="prod-input-table">
+      <thead>
+        <tr>
+          <th class="left th-ag" style="min-width:150px">Gerente / Data</th>
+          <th class="th-day">Prod. Desconto</th>
+          <th class="th-day">Ant / Demais</th>
+          <th class="th-day">Longo Prazo</th>
+          <th class="th-day">Liquidação</th>
+          <th class="th-calc">Produção ⚡</th>
+          <th class="th-net">Net ⚡</th>
+          <th class="th-ag">Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-prod-input">
+        <tr><td colspan="8" style="text-align:center;color:#aaa;padding:16px">Selecione a agência acima para ver os gerentes</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ── SEÇÃO 2: CONSOLIDADO MENSAL ── -->
+  <div class="card">
+    <div class="card-title">Período — Consolidado Mensal</div>
+    <div class="field-row">
+      <label>Mês/Ano:</label>
+      <input type="month" id="prod-mes" onchange="renderProdutividade();renderMiniDashNetProj()">
+      <input type="date" id="prod-dia-limpar" style="display:none">
+      <button class="btn btn-secondary btn-sm" onclick="renderProdutividade()">↻ Atualizar</button>
+    </div>
+  </div>
+
+  <!-- Edição por Data/Gerente -->
+  <div class="card" id="card-edicao-dia" style="display:none">
+    <div class="card-title" style="justify-content:space-between">
+      <span>✏️ Editar Produção por Data</span>
+      <button class="btn-ger-close" onclick="fecharEdicaoDia()">✕ Fechar</button>
+    </div>
+    <div id="edicao-dia-content">
+      <div style="color:#aaa;font-size:12px;text-align:center;padding:16px">Selecione a data acima e clique em Editar dia</div>
+    </div>
+  </div>
+
+  <!-- Totalizador -->
+  <div class="retorno-total" id="prod-total" style="display:none;margin-bottom:12px">
+    <div class="rt-item"><div class="rt-label">Produção Total</div><div class="rt-val" id="prod-pipe-total" style="color:#185FA5">R$ 0</div></div>
+    <div class="rt-item"><div class="rt-label">Liquidação Total</div><div class="rt-val" id="prod-liq-total">R$ 0</div></div>
+    <div class="rt-item"><div class="rt-label">Gerentes</div><div class="rt-val" id="prod-ag-count" style="color:#185FA5">0</div></div>
+    <div class="rt-item"><div class="rt-label">Dias lançados</div><div class="rt-val" id="prod-dias-count" style="color:#185FA5">0</div></div>
+  </div>
+
+  <!-- Cards pipe -->
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span>📅 Produção Consolidada — todos os dias / todos os gerentes</span>
+    </div>
+    <div class="pipe-grid" id="prod-pipe-grid" style="margin-bottom:12px">
+      <div style="color:#aaa;font-size:11px;padding:8px">Selecione o mês para ver</div>
+    </div>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left th-ag">Agência</th>
+          <th class="th-day">VOP Acum.</th>
+          <th class="th-day">Liquidação</th>
+          <th class="th-net">Net Proj. Mês</th>
+          <th class="th-ag">Dias</th>
+          <th class="th-ag">🗑</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-prod">
+        <tr><td colspan="6" style="text-align:center;color:#aaa;padding:14px">Selecione o mês para ver</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+
+
 
 </div>
 </div>
@@ -784,6 +748,7 @@
 
     <!-- Filtro e limpeza -->
     <div class="filter-bar" style="margin-top:12px">
+      <button class="btn btn-secondary btn-sm" onclick="inspecionarDados()" style="background:#555;color:#fff;border:none">🔍 Inspecionar dados</button>
       <input type="text" id="filtro-agencia" placeholder="🔍 Filtrar agência..." oninput="filtrarTabelas()">
       <button class="btn-filtrar" onclick="filtrarTabelas()">Filtrar</button>
       <button class="btn-limpar-painel" onclick="limparFiltro()">✕ Limpar filtro</button>
@@ -794,7 +759,7 @@
   </div>
 
 
-  <!-- Cards por Agência com relógio -->
+  <!-- Cards por Agência com relógio e quartil -->
   <div class="card">
     <div class="card-title">🏦 Desempenho por Agência
       <span class="pill pill-blue">Q1&gt;50,7k | Q2&gt;39,3k | Q3&gt;23,8k</span>
@@ -806,6 +771,8 @@
 
   <!-- Quartis Regional -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+
+    <!-- Quartil Gerentes -->
     <div class="card" style="margin-bottom:0">
       <div class="card-title">📊 Quartil Gerentes
         <span class="pill pill-blue">Q1&gt;25M | Q2&gt;19M | Q3&gt;13M</span>
@@ -813,6 +780,8 @@
       <div id="quartil-ger-bars" style="display:flex;align-items:flex-end;justify-content:center;gap:20px;height:90px;margin:10px 0 6px"></div>
       <div id="quartil-ger-table"></div>
     </div>
+
+    <!-- Quartil Agências -->
     <div class="card" style="margin-bottom:0">
       <div class="card-title">📊 Quartil Agências
         <span class="pill pill-green">Q1&gt;50M | Q2&gt;39M | Q3&gt;24M</span>
@@ -820,6 +789,23 @@
       <div id="quartil-ag-bars" style="display:flex;align-items:flex-end;justify-content:center;gap:20px;height:90px;margin:10px 0 6px"></div>
       <div id="quartil-ag-table"></div>
     </div>
+  </div>
+
+  <!-- Ranking de Gerentes -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+
+    <!-- Top Gerentes por VOP -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">🏆 Top Gerentes — VOP Acumulado</div>
+      <div id="rank-top-vop"></div>
+    </div>
+
+    <!-- Piores Gerentes -->
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">⚠️ Atenção — Menor VOP</div>
+      <div id="rank-bot-vop"></div>
+    </div>
+
   </div>
 
   <!-- Painel Mensal -->
@@ -872,7 +858,7 @@
         </tr>
       </thead>
       <tbody id="tbody-diario">
-        <tr><td colspan="8" style="text-align:center;color:#aaa;padding:14px">Carregando...</td></tr>
+        <tr><td colspan="9" style="text-align:center;color:#aaa;padding:14px">Carregando...</td></tr>
       </tbody>
     </table>
     </div>
@@ -880,8 +866,6 @@
 
 </div>
 </div>
-
-<div class="toast" id="toast"></div>
 
 <!-- ══════════════════ ABA TRIMESTRE ══════════════════ -->
 <div class="page" id="page-trimestre">
@@ -900,6 +884,8 @@
   </div>
 </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <!-- Modal de confirmação exclusão -->
 <div id="del-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center">
@@ -965,242 +951,43 @@
 
 
 <script>
-  // ═══════════════════════════════════════════════════════
-  // ── SUPABASE — BANCO DE DADOS PERSISTENTE ──
-  // ═══════════════════════════════════════════════════════
-  const SUPA_URL = 'https://fdefnukjulrhquzmufke.supabase.co';
-  const SUPA_KEY = 'sb_publishable_v8PxB_fIUgVLgT4MoNistQ_OjykbD5O';
-
-
-  // ═══════════════════════════════════════════════════════
-  // ── AUTENTICAÇÃO VIA SUPABASE ──
-  // ═══════════════════════════════════════════════════════
-  const REMEMBER_KEY = 'agencias_senha_salva';
-
-  // Verifica se há senha salva no cache — preenche automaticamente
-  (function checkSavedPassword() {
-    try {
-      const saved = localStorage.getItem(REMEMBER_KEY);
-      if (saved) {
-        document.getElementById('login-pass').value = saved;
-        document.getElementById('login-remember').checked = true;
-      }
-    } catch(e) {}
-  })();
-
-  function toggleSenha() {
-    const input = document.getElementById('login-pass');
-    const eye   = document.getElementById('login-eye');
-    if (input.type === 'password') {
-      input.type = 'text';
-      eye.textContent = '🙈';
-    } else {
-      input.type = 'password';
-      eye.textContent = '👁';
-    }
-  }
-
-  function onRememberChange() {
-    if (!document.getElementById('login-remember').checked) {
-      localStorage.removeItem(REMEMBER_KEY);
-    }
-  }
-
-  async function doLogin() {
-    const pass   = document.getElementById('login-pass').value.trim();
-    const errEl  = document.getElementById('login-err');
-    const loadEl = document.getElementById('login-loading');
-    const btn    = document.getElementById('login-btn');
-    if (!pass) { errEl.textContent = '⚠️ Digite a senha.'; return; }
-
-    errEl.textContent  = '';
-    loadEl.textContent = 'Verificando...';
-    btn.disabled       = true;
-
-    try {
-      const res = await fetch(
-        `${SUPA_URL}/rest/v1/app_config?chave=eq.senha_app&select=valor`,
-        { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
-      );
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const rows = await res.json();
-      if (!rows.length) throw new Error('Configuração não encontrada');
-
-      const senhaCorreta = rows[0].valor;
-      if (pass === senhaCorreta) {
-        // Salva no cache se "lembrar" estiver marcado
-        if (document.getElementById('login-remember').checked) {
-          localStorage.setItem(REMEMBER_KEY, pass);
-        } else {
-          localStorage.removeItem(REMEMBER_KEY);
-        }
-        // Esconde login e inicia app
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('loading-overlay').style.display = 'flex';
-        loadEl.textContent = '';
-        initApp();
-      } else {
-        errEl.textContent  = '❌ Senha incorreta. Tente novamente.';
-        loadEl.textContent = '';
-        btn.disabled       = false;
-        document.getElementById('login-pass').value = '';
-        document.getElementById('login-pass').focus();
-      }
-    } catch(e) {
-      errEl.textContent  = '❌ Erro ao conectar. Verifique sua conexão.';
-      loadEl.textContent = '';
-      btn.disabled       = false;
-      console.error('doLogin erro:', e);
-    }
-  }
-
-  function supaHeaders(extra) {
-    return Object.assign({
-      'Content-Type': 'application/json',
-      'apikey': SUPA_KEY,
-      'Authorization': `Bearer ${SUPA_KEY}`
-    }, extra || {});
-  }
-
-  // ── Cache em memória ──
-  const _memStore = {};
-
-  function lsGet(key) {
-    return (_memStore[key] !== undefined && _memStore[key] !== null) ? _memStore[key] : null;
-  }
-  function lsSet(key, value) {
-    _memStore[key] = value;
-    supaSet(key, value);
-  }
-  function lsGetItem(key) { return lsGet(key); }
-  function lsSetItem(key, val) { lsSet(key, val); }
-
-  // ── Status de conexão ──
-  function setDbStatus(status, msg) {
-    const el  = document.getElementById('db-status-indicator');
-    const txt = document.getElementById('db-status-text');
-    if (!el || !txt) return;
-    el.className    = 'db-status ' + status;
-    txt.textContent = msg;
-  }
-
-  // ── Fila de salvamento (evita sobrecarga de conexões simultâneas) ──
-  const _saveQueue = {};
-  const _saveTimers = {};
-
-  function lsSetQueued(key, value) {
-    _memStore[key] = value;
-    // Debounce: agrupa múltiplas escritas em 300ms numa só chamada
-    clearTimeout(_saveTimers[key]);
-    _saveTimers[key] = setTimeout(() => supaSet(key, _memStore[key]), 300);
-  }
-
-  // ── Escreve no Supabase: tenta PATCH, se não existir faz POST ──
-  async function supaSet(key, value) {
-    setDbStatus('syncing', 'Salvando...');
-    try {
-      // 1. Tenta atualizar registro existente (PATCH)
-      const patch = await fetch(
-        `${SUPA_URL}/rest/v1/app_storage?chave=eq.${encodeURIComponent(key)}`,
-        {
-          method: 'PATCH',
-          headers: supaHeaders({ 'Prefer': 'return=representation', 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ valor: value, atualizado_em: new Date().toISOString() })  // PATCH body — sem chave
-        }
-      );
-      if (patch.ok) {
-        const updated = await patch.json();
-        if (updated && updated.length > 0) {
-          // PATCH atualizou com sucesso
-          setDbStatus('online', '🟢 Online');
-          return;
-        }
-        // Nenhuma linha afetada — registro não existe, faz INSERT
-        const post = await fetch(`${SUPA_URL}/rest/v1/app_storage`, {
-          method: 'POST',
-          headers: supaHeaders({ 'Prefer': 'return=minimal', 'Content-Type': 'application/json' }),
-          body: JSON.stringify({ chave: key, valor: value, atualizado_em: new Date().toISOString() })
-        });
-        if (post.ok || post.status === 201) {
-          setDbStatus('online', '🟢 Online');
-          return;
-        }
-        const errText = await post.text().catch(() => '');
-        throw new Error('POST ' + post.status + ' ' + errText);
-      }
-      const errText = await patch.text().catch(() => '');
-      throw new Error('PATCH ' + patch.status + ' ' + errText);
-    } catch(e) {
-      setDbStatus('offline', '🔴 Erro ao salvar');
-      console.error('supaSet erro:', key, e);
-    }
-  }
-
-  // ── Carrega TUDO do Supabase na inicialização ──
-  async function initApp() {
-    const loadingText = document.getElementById('loading-text');
-    if (loadingText) loadingText.textContent = 'Conectando ao banco de dados...';
-    setDbStatus('syncing', 'Conectando...');
-    let tentativas = 0;
-    while (tentativas < 3) {
-      try {
-        const res = await fetch(
-          `${SUPA_URL}/rest/v1/app_storage?select=chave,valor&order=atualizado_em.desc`,
-          { headers: supaHeaders() }
-        );
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const rows = await res.json();
-        rows.forEach(r => { _memStore[r.chave] = r.valor; });
-        setDbStatus('online', '🟢 Online');
-        break;
-      } catch(e) {
-        tentativas++;
-        if (tentativas >= 3) {
-          setDbStatus('offline', '🔴 Offline — sem dados do servidor');
-          console.error('initApp falhou:', e);
-        } else {
-          if (loadingText) loadingText.textContent = `Reconectando... (tentativa ${tentativas + 1})`;
-          await new Promise(r => setTimeout(r, tentativas * 1000));
-        }
-      }
-    }
-    document.getElementById('loading-overlay').style.display = 'none';
-    _initAppUI();
-  }
-
-  // Inicia automaticamente ao carregar a página
-  // Auto-login se senha já estiver salva no cache
-  window.addEventListener('DOMContentLoaded', () => {
-    const saved = localStorage.getItem(REMEMBER_KEY);
-    if (saved) {
-      // Tenta login automático com senha salva
-      document.getElementById('login-pass').value = saved;
-      document.getElementById('login-remember').checked = true;
-      doLogin();
-    }
-  });
-
-  // ═══════════════════════════════════════════════════════
   // ── Produtividade — Tabela de preenchimento por gerente ──
   const PROD_KEY = 'lancamentos_prod_gerente';
 
   function salvarProdGerente(payload) {
-    let store = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
     store = store.filter(r => !(r.agency === payload.agency && r.gerente === payload.gerente && r.date === payload.date));
     store.push(payload);
-    lsSetItem(PROD_KEY, JSON.stringify(store));
+    localStorage.setItem(PROD_KEY, JSON.stringify(store));
   }
 
   function carregarProdGerente(agency, date) {
-    return JSON.parse(lsGetItem(PROD_KEY) || '[]')
+    return JSON.parse(localStorage.getItem(PROD_KEY) || '[]')
       .filter(r => r.agency === agency && r.date === date);
+  }
+
+  function habilitarEdicaoGerente(rowId) {
+    // Habilita os inputs da linha para edição
+    ['pd-desc-','pd-ant-','pd-lp-','pd-liq-'].forEach(prefix => {
+      const el = document.getElementById(prefix + rowId);
+      if (el) {
+        el.removeAttribute('disabled');
+        el.style.background = '#fff9e6';
+        el.style.borderColor = '#e67e22';
+        el.focus();
+      }
+    });
+    // Marca linha como em edição
+    const tr = document.getElementById('prod-tr-' + rowId);
+    if (tr) tr.style.background = '#fff9e6';
+    showToast('✏️ Edite os valores e clique em Salvar.');
   }
 
   function calcProdRow(rowId) {
     const desc = parseFloat(document.getElementById('pd-desc-'+rowId).value) || 0;
-    const ant  = parseFloat(document.getElementById('pd-ant-'+rowId).value)  || 0;
-    const lp   = parseFloat(document.getElementById('pd-lp-'+rowId).value)   || 0;
-    const liq  = parseFloat(document.getElementById('pd-liq-'+rowId).value)  || 0;
+    const ant  = parseFloat(document.getElementById('pd-ant-'+rowId)?.value)  || 0;
+    const lp   = parseFloat(document.getElementById('pd-lp-'+rowId)?.value)   || 0;
+    const liq  = parseFloat(document.getElementById('pd-liq-'+rowId)?.value)  || 0;
     const pipe = desc + ant + lp;
     const net  = pipe + liq;  // liq negativa
     const pipeEl = document.getElementById('pd-pipe-'+rowId);
@@ -1212,26 +999,47 @@
     }
   }
 
-  function submitProdGerente(rowId, agency, gerente, date) {
-    const desc = parseFloat(document.getElementById('pd-desc-'+rowId).value) || 0;
-    const ant  = parseFloat(document.getElementById('pd-ant-'+rowId).value)  || 0;
-    const lp   = parseFloat(document.getElementById('pd-lp-'+rowId).value)   || 0;
-    const liq  = parseFloat(document.getElementById('pd-liq-'+rowId).value)  || 0;
+  // Salvar via classes gi-* — sem depender de IDs
+  window._salvarGer = function(btn) {
+    const tr      = btn.closest('tr');
+    const agency  = btn.getAttribute('data-agency');
+    const gerente = btn.getAttribute('data-gerente');
+    const date    = btn.getAttribute('data-date');
+    if (!date)   { showToast('⚠️ Selecione a data!', true); return; }
+    if (!agency) { showToast('⚠️ Agência não encontrada!', true); return; }
+    const desc = parseFloat(tr.querySelector('.gi-desc')?.value) || 0;
+    const ant  = parseFloat(tr.querySelector('.gi-ant')?.value)  || 0;
+    const lp   = parseFloat(tr.querySelector('.gi-lp')?.value)   || 0;
+    const liq  = parseFloat(tr.querySelector('.gi-liq')?.value)  || 0;
     const pipe = desc + ant + lp;
-    const net  = pipe + liq;  // liq negativa
+    const net  = pipe + liq;
     const payload = { agency, gerente, date, prodDesconto: desc, antDemais: ant, longoPrazo: lp, liquidacaoTotal: liq, pipe, netProjetado: net };
     salvarProdGerente(payload);
-    // Marca linha como salva
-    const tr = document.getElementById('prod-tr-'+rowId);
-    if (tr) { tr.className = 'prod-row-saved'; }
-    showToast('✅ ' + gerente + ' — salvo! Consolidado atualizado.');
+    tr.className = 'prod-row-saved';
+    showToast('✅ ' + gerente + ' salvo!');
     renderProdutividade();
+    renderGerentesAgencia();
+  };
+
+  function submitProdGerente(rowId, agency, gerente, date) {
+    // Fallback legado — tenta pelo rowId
+    const desc = parseFloat(document.getElementById('pd-desc-'+rowId)?.value) || 0;
+    const ant  = parseFloat(document.getElementById('pd-ant-'+rowId)?.value)  || 0;
+    const lp   = parseFloat(document.getElementById('pd-lp-'+rowId)?.value)   || 0;
+    const liq  = parseFloat(document.getElementById('pd-liq-'+rowId)?.value)  || 0;
+    const pipe = desc + ant + lp;
+    const net  = pipe + liq;
+    const payload = { agency, gerente, date, prodDesconto: desc, antDemais: ant, longoPrazo: lp, liquidacaoTotal: liq, pipe, netProjetado: net };
+    salvarProdGerente(payload);
+    showToast('✅ ' + gerente + ' salvo!');
+    renderProdutividade();
+    renderGerentesAgencia();
   }
 
   function limparProdGerente(rowId, agency, gerente, date) {
-    let store = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
     store = store.filter(r => !(r.agency === agency && r.gerente === gerente && r.date === date));
-    lsSetItem(PROD_KEY, JSON.stringify(store));
+    localStorage.setItem(PROD_KEY, JSON.stringify(store));
     // Limpa inputs
     ['desc','ant','lp','liq'].forEach(f => {
       const el = document.getElementById('pd-'+f+'-'+rowId);
@@ -1244,208 +1052,239 @@
     renderProdutividade();
   }
 
-  function renderGerentesAgencia() {
-    const agency = document.getElementById('prod-agency').value;
-    const date   = document.getElementById('prod-data').value;
-    const tbody  = document.getElementById('tbody-prod-input');
+  function renderGerentesAgencia(agParam) {
+    var agency = agParam || document.getElementById('prod-agency').value;
+    if (agParam) { var _pa=document.getElementById('prod-agency'); if(_pa) _pa.value=agParam; }
+    var date   = document.getElementById('prod-data').value;
+    var tbody  = document.getElementById('tbody-prod-input');
 
-    if (!agency) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#aaa;padding:16px">Selecione a agência</td></tr>';
-      return;
-    }
+    if (!agency) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:16px">Selecione a agência</td></tr>'; return; }
+    if (!date)   { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:16px">Selecione a data</td></tr>'; return; }
 
-    const gerentes = gerentesDaAgencia(agency);
+    var gerentes = gerentesDaAgencia(agency);
     if (!gerentes.length) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#aaa;padding:16px">Nenhum gerente cadastrado para esta agência.<br><button class="btn btn-secondary btn-sm" style="margin-top:8px" onclick="abrirGerentes()">👥 Cadastrar gerentes</button></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:16px">Nenhum gerente cadastrado. <button onclick="abrirGerentes()" class="btn btn-secondary btn-sm">👥 Cadastrar</button></td></tr>';
       return;
     }
 
-    // Carrega dados já salvos para pré-preencher
-    const salvos = date ? carregarProdGerente(agency, date) : [];
-    const salvoMap = {};
-    salvos.forEach(r => { salvoMap[r.gerente] = r; });
+    var salvos = JSON.parse(localStorage.getItem(PROD_KEY) || '[]').filter(function(r){ return r.agency===agency && r.date===date; });
+    var salvoMap = {};
+    salvos.forEach(function(r){ salvoMap[r.gerente] = r; });
 
-    tbody.innerHTML = gerentes.map((g, i) => {
-      const rowId  = agency.replace(/\s/g,'') + '_' + i;
-      const salvo  = salvoMap[g.nome];
-      const saved  = !!salvo;
-      const desc   = salvo ? salvo.prodDesconto : '';
-      const ant    = salvo ? salvo.antDemais    : '';
-      const lp     = salvo ? salvo.longoPrazo   : '';
-      const liq    = salvo ? salvo.liquidacaoTotal : '';
-      const pipe   = salvo ? fmtBRL(salvo.pipe) : 'R$ 0';
-      const net    = salvo ? salvo.netProjetado  : 0;
-      const netCls = net >= 0 ? 'pos' : 'neg';
-      return `<tr id="prod-tr-${rowId}" class="${saved ? 'prod-row-saved' : ''}">
-        <td class="ag">${g.nome}${saved ? ' ✅' : ''}</td>
-        <td><input class="prod-input" id="pd-desc-${rowId}" type="number" placeholder="0" value="${desc}" oninput="calcProdRow('${rowId}')"></td>
-        <td><input class="prod-input" id="pd-ant-${rowId}"  type="number" placeholder="0" value="${ant}"  oninput="calcProdRow('${rowId}')"></td>
-        <td><input class="prod-input" id="pd-lp-${rowId}"   type="number" placeholder="0" value="${lp}"   oninput="calcProdRow('${rowId}')"></td>
-        <td><input class="prod-input" id="pd-liq-${rowId}"  type="number" placeholder="0" value="${liq}"  oninput="calcProdRow('${rowId}')"></td>
-        <td class="auto-val" id="pd-pipe-${rowId}">${pipe}</td>
-        <td class="prod-calc ${netCls}" id="pd-net-${rowId}">${saved ? fmtBRL(net) : 'R$ 0'}</td>
-        <td style="text-align:center;white-space:nowrap">
-          <button class="btn-salvar-ger" onclick="submitProdGerente('${rowId}','${agency}','${g.nome}','${date}')">Salvar</button>
-          ${saved ? `<button class="btn-limpar-ger" onclick="limparProdGerente('${rowId}','${agency}','${g.nome}','${date}')" title="Limpar">✕</button>` : ''}
-        </td>
-      </tr>`;
-    }).join('');
-
-    // Calcula linhas que já têm valores preenchidos
-    gerentes.forEach((g, i) => {
-      const rowId = agency.replace(/\s/g,'') + '_' + i;
-      if (salvoMap[g.nome]) calcProdRow(rowId);
+    var mes = date.slice(0,7);
+    var vopAcum = {};
+    JSON.parse(localStorage.getItem(PROD_KEY)||'[]').filter(function(r){ return r.agency===agency && r.date && r.date.startsWith(mes); }).forEach(function(r){
+      if(!vopAcum[r.gerente]) vopAcum[r.gerente]=0;
+      vopAcum[r.gerente]+=(Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
     });
+
+    function qFlag(v) {
+      if(v>25000000) return '<span style="background:#1a3a6e;color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;margin-left:4px">Q1</span>';
+      if(v>19000000) return '<span style="background:#0d7a5f;color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;margin-left:4px">Q2</span>';
+      if(v>13000000) return '<span style="background:#e67e22;color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;margin-left:4px">Q3</span>';
+      if(v>0)        return '<span style="background:#b92d2d;color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;margin-left:4px">Q4</span>';
+      return '';
+    }
+
+    var rows = '';
+    gerentes.forEach(function(g) {
+      var s=salvoMap[g.nome], saved=!!s;
+      var desc=s?(s.prodDesconto||0):'', ant=s?(s.antDemais||0):'', lp=s?(s.longoPrazo||0):'', liq=s?(s.liquidacaoTotal||0):'';
+      var pipe=s?fmtBRL(s.pipe||0):'R$ 0', net=s?(s.netProjetado||0):0, nc=net>=0?'pos':'neg';
+      rows += '<tr '+(saved?'class="prod-row-saved"':'')+'>'+
+        '<td class="ag">'+g.nome+qFlag(vopAcum[g.nome]||0)+(saved?' ✅':'')+' </td>'+
+        '<td><input class="prod-input gi-desc" type="number" placeholder="0" value="'+desc+'" oninput="calcRowAuto(this)"></td>'+
+        '<td><input class="prod-input gi-ant"  type="number" placeholder="0" value="'+ant+'"  oninput="calcRowAuto(this)"></td>'+
+        '<td><input class="prod-input gi-lp"   type="number" placeholder="0" value="'+lp+'"   oninput="calcRowAuto(this)"></td>'+
+        '<td><input class="prod-input gi-liq"  type="number" placeholder="0" value="'+liq+'"  oninput="calcRowAuto(this)"></td>'+
+        '<td class="auto-val gi-pipe">'+pipe+'</td>'+
+        '<td class="prod-calc gi-net '+nc+'">'+(saved?fmtBRL(net):'R$ 0')+'</td>'+
+        '<td style="text-align:center;white-space:nowrap">'+
+          '<button class="btn-salvar-ger" data-agency="'+agency+'" data-gerente="'+g.nome+'" data-date="'+date+'" onclick="salvarGerenteProd(this)">Salvar</button> '+
+          '<button class="btn-gd-del" data-agency="'+agency+'" data-gerente="'+g.nome+'" data-date="'+date+'" onclick="removerGerente(this)" title="Excluir">🗑</button>'+
+        '</td>'+
+        '</tr>';
+    });
+
+    var hist = JSON.parse(localStorage.getItem(PROD_KEY)||'[]').filter(function(r){ return r.agency===agency && r.date && r.date.startsWith(mes) && r.date!==date; }).sort(function(a,b){ return b.date.localeCompare(a.date); });
+    if(hist.length) {
+      rows += '<tr><td colspan="9" style="padding:6px 9px;background:#f0f2f7;font-size:10px;color:#888;font-weight:600">📅 Histórico do mês</td></tr>';
+      hist.forEach(function(r) {
+        var p=(Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+        var n=p+(Number(r.liquidacaoTotal)||0), nc2=n>=0?'#0d7a5f':'#b92d2d';
+        var pt=r.date.split('-'); var dd=pt[2]+'/'+pt[1];
+        rows += '<tr style="background:#fafbfd;font-size:11px">'+
+          '<td class="ag" style="color:#555">'+r.gerente+' <small style="color:#aaa">'+dd+'</small></td>'+
+          '<td style="text-align:right"><span class="hval" style="color:#888">'+fmtBRL(r.prodDesconto||0)+'</span><input class="prod-input hinput" type="number" style="display:none;width:80px" value="'+(r.prodDesconto||0)+'" oninput="calcHistRowTr(this.closest(&quot;tr&quot;))"></td>'+
+          '<td style="text-align:right"><span class="hval" style="color:#888">'+fmtBRL(r.antDemais||0)+'</span><input class="prod-input hinput" type="number" style="display:none;width:80px" value="'+(r.antDemais||0)+'" oninput="calcHistRowTr(this.closest(&quot;tr&quot;))"></td>'+
+          '<td style="text-align:right"><span class="hval" style="color:#888">'+fmtBRL(r.longoPrazo||0)+'</span><input class="prod-input hinput" type="number" style="display:none;width:80px" value="'+(r.longoPrazo||0)+'" oninput="calcHistRowTr(this.closest(&quot;tr&quot;))"></td>'+
+          '<td style="text-align:right"><span class="hval" style="color:#888">'+fmtBRL(r.liquidacaoTotal||0)+'</span><input class="prod-input hinput" type="number" style="display:none;width:80px" value="'+(r.liquidacaoTotal||0)+'" oninput="calcHistRowTr(this.closest(&quot;tr&quot;))"></td>'+
+          '<td class="auto-val hpipe">'+fmtBRL(p)+'</td>'+
+          '<td class="hnet '+(n>=0?'pos':'neg')+'">'+fmtBRL(n)+'</td>'+
+          '<td style="white-space:nowrap">'+
+            '<button class="btn-salvar-ger hbtn-edit" style="background:#e67e22;font-size:10px;padding:3px 8px" data-agency="'+agency+'" data-gerente="'+r.gerente+'" data-date="'+r.date+'" onclick="editarHistLinha(this)">✏️</button>'+
+            '<button class="btn-salvar-ger hbtn-save" style="display:none;font-size:10px;padding:3px 8px" data-agency="'+agency+'" data-gerente="'+r.gerente+'" data-date="'+r.date+'" onclick="salvarHistLinha(this)">✔</button>'+
+          '</td>'+
+          '<td><button class="btn-gd-del" data-agency="'+agency+'" data-gerente="'+r.gerente+'" data-date="'+r.date+'" onclick="removerGerente(this)">🗑</button></td>'+
+          '</tr>';
+      });
+    }
+    tbody.innerHTML = rows;
   }
 
   // ── Produtividade ───────────────────────────────────────
   function renderProdutividade() {
-    const mes = document.getElementById('prod-mes').value;
+    const mes   = document.getElementById('prod-mes').value;
     if (!mes) return;
 
-    // Lê PROD_KEY (aba Produtividade) e STORE_KEY (produção diária com gerente)
-    const prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
-    const diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    const agFil = (document.getElementById('diario-filtro-ag')||{value:''}).value ||
+                  (document.getElementById('prod-agency')||{value:''}).value;
 
-    const prodMes = prodStore.filter(r => r.date && r.date.startsWith(mes));
-    const diarMes = diarStore.filter(r => r.date && r.date.startsWith(mes));
+    const prodStore = JSON.parse(localStorage.getItem(PROD_KEY)  || '[]');
+    const diarStore = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
 
-    // Agrupa por GERENTE (soma mesmo gerente de agências diferentes)
-    // E por agência+gerente para manter detalhe por agência
-    const byGer    = {};  // só por gerente — para VOP total do gerente
-    const byAgGer  = {};  // por agência+gerente — para detalhamento
-    const seenProd = {};  // deduplicação por data+agencia+gerente
+    let prodMes = prodStore.filter(r => r.date && r.date.startsWith(mes));
+    let diarMes = diarStore.filter(r => r.date && r.date.startsWith(mes));
+    if (agFil) {
+      prodMes = prodMes.filter(r => r.agency === agFil);
+      diarMes = diarMes.filter(r => r.agency === agFil);
+    }
 
-    const addItem = (agency, ger, pipe, liq, date) => {
-      const dedupKey = date + '||' + agency + '||' + ger;
-      if (seenProd[dedupKey]) return;
-      seenProd[dedupKey] = true;
-      // Por gerente (total)
-      if (!byGer[ger]) byGer[ger] = { gerente: ger, pipe: 0, liq: 0, dias: [], agencias: new Set() };
-      byGer[ger].pipe += pipe;
-      byGer[ger].liq  += liq;
-      byGer[ger].dias.push(date);
-      byGer[ger].agencias.add(agency);
-      // Por agência+gerente
-      const key = agency + '||' + ger;
-      if (!byAgGer[key]) byAgGer[key] = { empresa: agency, gerente: ger, pipe: 0, liq: 0, dias: [] };
-      byAgGer[key].pipe += pipe;
-      byAgGer[key].liq  += liq;
-      byAgGer[key].dias.push(date);
-    };
-
-    // Sempre calcula pipe = desc+ant+lp na hora (nunca usa r.pipe salvo)
     const calcPipe = r => (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
 
+    // Consolida por AGÊNCIA — soma TODOS os dias e TODOS os gerentes
+    const byAg = {};
+
+    // PROD_KEY — soma por gerente+dia (cada registro é único por gerente/data)
     prodMes.forEach(r => {
-      const pipe = calcPipe(r) || Number(r.pipe)||0; // usa calculado, fallback para salvo
-      addItem(r.agency, r.gerente || r.agency, pipe, Number(r.liquidacaoTotal)||0, r.date);
+      if (!byAg[r.agency]) byAg[r.agency] = { agency:r.agency, pipe:0, liq:0, dias:new Set() };
+      byAg[r.agency].pipe += calcPipe(r) || Number(r.pipe)||0;
+      byAg[r.agency].liq  += Number(r.liquidacaoTotal)||0;
+      byAg[r.agency].dias.add(r.date);
+    });
+
+    // STORE_KEY — soma por agência+dia (já é consolidado da agência)
+    // Evitar dupla contagem: só usa STORE_KEY se não tem PROD_KEY para aquele dia
+    const diasComProd = {};
+    prodMes.forEach(r => {
+      if (!diasComProd[r.agency]) diasComProd[r.agency] = new Set();
+      diasComProd[r.agency].add(r.date);
     });
     diarMes.forEach(r => {
-      const ger = r.gerente;
-      if (!ger || ger === r.agency) return;
-      addItem(r.agency, ger, calcPipe(r), Number(r.liquidacaoTotal)||0, r.date);
+      // Só adiciona do STORE se não há lançamento de gerentes naquele dia
+      if (diasComProd[r.agency] && diasComProd[r.agency].has(r.date)) return;
+      if (!byAg[r.agency]) byAg[r.agency] = { agency:r.agency, pipe:0, liq:0, dias:new Set() };
+      byAg[r.agency].pipe += calcPipe(r);
+      byAg[r.agency].liq  += Number(r.liquidacaoTotal)||0;
+      byAg[r.agency].dias.add(r.date);
     });
 
-    const items = Object.values(byAgGer).map(ag => ({
+    // Pega netProjMes do STORE_KEY (valor exato da primeira tela)
+    const storeAll = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
+    const netProjByAg = {};
+    storeAll.filter(r => r.date && r.date.startsWith(mes))
+      .sort((a,b) => a.date.localeCompare(b.date))
+      .forEach(r => { if (r.netProjMes !== undefined) netProjByAg[r.agency] = Number(r.netProjMes)||0; });
+
+    const items = Object.values(byAg).map(ag => ({
       ...ag,
-      netProj: ag.pipe + ag.liq,
-      diasCount: [...new Set(ag.dias)].length
-    }));
+      // Net Projetado = valor da aba Lançar Produção (td-netProj)
+      netProj:   netProjByAg[ag.agency] !== undefined ? netProjByAg[ag.agency] : (ag.pipe + ag.liq),
+      diasCount: ag.dias.size
+    })).sort((a,b) => b.pipe - a.pipe);
 
     if (!items.length) {
-      document.getElementById('prod-pipe-grid').innerHTML = '<div style="color:#aaa;font-size:11px;padding:8px">Sem dados para este mês</div>';
-      document.getElementById('tbody-prod').innerHTML = '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:14px">Sem dados — faça lançamentos na seção acima</td></tr>';
-      document.getElementById('prod-total').style.display = 'none';
+      const grid = document.getElementById('prod-pipe-grid');
+      if (grid) grid.innerHTML = '<div style="color:#aaa;font-size:11px;padding:12px;text-align:center">Sem dados — selecione o mês</div>';
+      const tot = document.getElementById('prod-total');
+      if (tot) tot.style.display = 'none';
       return;
     }
 
-    // Ordena decrescente por pipe
-    items.sort((a,b) => b.pipe - a.pipe);
-
     // Totalizador
-    const totPipe = items.reduce((s,i) => s + i.pipe, 0);
-    const totLiq  = items.reduce((s,i) => s + i.liq,  0);
-    const totNet  = items.reduce((s,i) => s + i.netProj, 0);
-    const nAg     = new Set(items.map(i => i.empresa)).size;
-    const nGer    = items.filter(i => i.gerente !== '—').length;
+    const totPipe = items.reduce((s,i) => s+i.pipe, 0);
+    const totLiq  = items.reduce((s,i) => s+i.liq,  0);
+    const totNet  = items.reduce((s,i) => s+i.netProj, 0);
 
     const totEl = document.getElementById('prod-total');
-    totEl.style.display = 'flex';
-    document.getElementById('prod-pipe-total').textContent = fmtBRL(totPipe);
-    document.getElementById('prod-liq-total').textContent  = fmtBRL(totLiq);
+    if (totEl) totEl.style.display = 'flex';
+    const ppEl = document.getElementById('prod-pipe-total');
+    if (ppEl) ppEl.textContent = fmtBRL(totPipe);
+    const llEl = document.getElementById('prod-liq-total');
+    if (llEl) llEl.textContent = fmtBRL(totLiq);
     const netEl = document.getElementById('prod-net-total');
-    netEl.textContent  = fmtBRL(totNet);
-    netEl.className    = 'rt-val ' + (totNet >= 0 ? 'green' : 'red');
-    document.getElementById('prod-ag-count').textContent = items.length;
-    const totalDias = items.reduce((s,i) => s + (i.diasCount||0), 0);
+    if (netEl) { netEl.textContent = fmtBRL(totNet); netEl.style.color = totNet>=0?'#0d7a5f':'#b92d2d'; }
+    const agCnt = document.getElementById('prod-ag-count');
+    if (agCnt) agCnt.textContent = items.length;
     const diasEl = document.getElementById('prod-dias-count');
-    if (diasEl) diasEl.textContent = totalDias;
+    if (diasEl) diasEl.textContent = items.reduce((s,i)=>s+i.diasCount,0);
 
-    // Cards de pipe
-    document.getElementById('prod-pipe-grid').innerHTML = items.map(item => {
-      return `<div class="pipe-card">
-        <div class="pc-empresa" title="${item.empresa}">${item.empresa}</div>
-        <div class="pc-gerente" title="${item.gerente}">${item.gerente}</div>
-        <div class="pc-valor">${fmtBRL(item.pipe)}</div>
-        <div style="font-size:9px;color:#888;margin-top:2px">Net: ${fmtShort(item.netProj)}</div>
+    // Cards por agência
+    const grid = document.getElementById('prod-pipe-grid');
+    if (grid) grid.innerHTML = items.map(item => {
+      const nc = item.netProj >= 0 ? '#0d7a5f' : '#b92d2d';
+      return `<div class="pipe-card" style="border-top:3px solid #1a3a6e">
+        <div style="font-weight:700;color:#1a3a6e;margin-bottom:4px;font-size:11px">${item.agency}</div>
+        <div style="font-size:14px;font-weight:700;color:#1a3a6e">${fmtBRL(item.pipe)}</div>
+        <div style="font-size:9px;color:#888;margin-top:2px">Net: <span style="color:${nc};font-weight:700">${fmtBRL(item.netProj)}</span></div>
+        <div style="font-size:9px;color:#aaa">${item.diasCount} dia${item.diasCount!==1?'s':''}</div>
       </div>`;
     }).join('');
 
-    // Tabela detalhada — usar índice global para evitar problemas de escopo
-    window._delItems = items.map(i => ({ empresa: i.empresa, gerente: i.gerente, mes: mes }));
-
-    // Armazena items completos para edição
-    window._editItems = items.map(i => ({ ...i }));
-    document.getElementById('tbody-prod').innerHTML = items.map((item, idx) => {
+    // Tabela detalhada por agência
+    window._delItems = items.map(i => ({ empresa:i.agency, gerente:i.agency, mes }));
+    const tbProd = document.getElementById('tbody-prod');
+    if (tbProd) tbProd.innerHTML = items.map(item => {
       const nc = item.netProj >= 0 ? 'pos' : 'neg';
-      return `<tr id="prod-row-${idx}">
-        <td class="ag">${item.empresa}</td>
-        <td>${item.gerente}</td>
-        <td style="text-align:right;font-weight:600">${fmtBRL(item.pipe)}</td>
-        <td style="text-align:right">${fmtBRL(item.liq)}</td>
+      return `<tr>
+        <td class="ag" style="font-weight:700">${item.agency}</td>
+        <td class="auto-val" style="text-align:right">${fmtBRL(item.pipe)}</td>
+        <td style="text-align:right;color:#b92d2d">${fmtBRL(item.liq)}</td>
         <td class="${nc}" style="text-align:right;font-weight:700">${fmtBRL(item.netProj)}</td>
-        <td style="text-align:center;font-size:11px;color:#888">${item.diasCount||0}d</td>
-        <td style="text-align:center;white-space:nowrap">
-          <button class="btn-edit-save-prod" onclick="abrirEditProd(${idx})"
-            title="Editar lançamentos de ${item.gerente}">✏️</button>
-          <button class="btn-limpar-ger" onclick="excluirProdGerente(${idx})"
-            title="Excluir produção de ${item.gerente}">🗑</button>
+        <td style="text-align:center;color:#888">${item.diasCount}d</td>
+        <td style="text-align:center">
+          <button class="btn-gd-del" onclick="excluirProdAgencia('${item.agency}','${mes}')" title="Excluir">🗑</button>
         </td>
       </tr>`;
-    }).join('');
+    }).join('') + `<tr style="background:#1a3a6e;color:#fff;font-weight:700">
+      <td>TOTAL</td>
+      <td style="text-align:right">${fmtBRL(totPipe)}</td>
+      <td style="text-align:right">${fmtBRL(totLiq)}</td>
+      <td style="text-align:right;color:${totNet>=0?'#90ee90':'#ff9999'}">${fmtBRL(totNet)}</td>
+      <td></td><td></td>
+    </tr>`;
   }
 
-  // Abre modal de confirmação para excluir
-  function excluirProdGerente(idx) {
-    const item = window._delItems && window._delItems[idx];
-    if (!item) { showToast('⚠️ Item não encontrado.', true); return; }
+  function excluirProdAgencia(agency, mes) {
     const modal = document.getElementById('del-modal');
     const msg   = document.getElementById('del-modal-msg');
-    const btn   = document.getElementById('del-modal-btn');
-    msg.innerHTML = 'Deseja excluir <strong>toda a produção</strong> de:<br><br>' +
-      '👤 <strong>' + item.gerente + '</strong><br>' +
-      '🏦 ' + item.empresa + '<br>' +
-      '📅 Mês: ' + item.mes + '<br><br>' +
-      '<span style="color:#b92d2d;font-size:11px">Esta ação não pode ser desfeita.</span>';
-    btn.onclick = function() {
+    const mbtn  = document.getElementById('del-modal-btn');
+    msg.innerHTML = 'Apagar toda a produção de <strong>'+agency+'</strong> em <strong>'+mes+'</strong>?';
+    mbtn.onclick = function() {
       modal.style.display = 'none';
-      limparGerMes(item.empresa, item.gerente, item.mes);
+      let p = JSON.parse(localStorage.getItem(PROD_KEY)||'[]');
+      p = p.filter(r => !(r.agency===agency && r.date && r.date.startsWith(mes)));
+      localStorage.setItem(PROD_KEY, JSON.stringify(p));
+      let d = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
+      d = d.filter(r => !(r.agency===agency && r.date && r.date.startsWith(mes)));
+      localStorage.setItem(STORE_KEY, JSON.stringify(d));
+      showToast('🗑 Produção de '+agency+' removida!');
+      renderProdutividade();
     };
     modal.style.display = 'flex';
   }
-  window.excluirProdGerente = excluirProdGerente;
+
 
   function limparGerMes(agency, gerente, mes) {
-    let prodStore = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    let prodStore = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
     prodStore = prodStore.filter(r => !(r.agency === agency && r.gerente === gerente && r.date && r.date.startsWith(mes)));
-    lsSetItem(PROD_KEY, JSON.stringify(prodStore));
-    let diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-    diarStore = diarStore.filter(r => !(r.agency === agency && r.gerente === gerente && r.date && r.date.startsWith(mes)));
-    lsSetItem(STORE_KEY, JSON.stringify(diarStore));
+    localStorage.setItem(PROD_KEY, JSON.stringify(prodStore));
+    // Também remove STORE_KEY do mesmo período
+    let diarStore = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+    diarStore = diarStore.filter(r => !(r.agency === agency && r.date && r.date.startsWith(mes)));
+    localStorage.setItem(STORE_KEY, JSON.stringify(diarStore));
     showToast('🗑 Lançamentos de ' + gerente + ' removidos!');
     renderProdutividade();
-    renderDiario();
     const agSel = document.getElementById('prod-agency');
     if (agSel && agSel.value === agency) renderGerentesAgencia();
   }
@@ -1465,58 +1304,121 @@
   // Também expor limparGerMes globalmente
   window.limparGerMes = limparGerMes;
 
+  function sincronizarAgencia(ag) {
+    const prodAg = document.getElementById('prod-agency');
+    if (prodAg) prodAg.value = ag || '';
+    const tbody = document.getElementById('tbody-prod-input');
+    if (!ag) {
+      if (tbody) tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:16px">Selecione uma agência acima</td></tr>';
+      const div = document.getElementById('mini-dash-netproj');
+      if (div) div.innerHTML = '';
+      return;
+    }
+    // setTimeout garante que prod-agency.value já foi atualizado no DOM
+    setTimeout(function() {
+      renderGerentesAgencia(ag);
+      renderMiniDashNetProj();
+      renderProdutividade();
+    }, 10);
+  }
+
+  function abrirEdicaoDiario(idx) {
+    const r = window._diarioRows && window._diarioRows[idx];
+    if (!r) return;
+    const modal = document.getElementById('del-modal');
+    const msg   = document.getElementById('del-modal-msg');
+    const btn   = document.getElementById('del-modal-btn');
+    const [y,m,d] = r.date.split('-');
+    msg.innerHTML =
+      '<div style="font-size:12px;font-weight:700;color:#1a3a6e;margin-bottom:10px">✏️ Editar ' + r.agency + ' — ' + d+'/'+m+'/'+y + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">' +
+        '<label>Prod. Desc.</label><input id="ed-d-desc" type="number" value="' + r.desc + '" style="padding:4px 8px;border:1px solid #d0d5e0;border-radius:5px">' +
+        '<label>Ant/Demais</label><input id="ed-d-ant"  type="number" value="' + r.ant  + '" style="padding:4px 8px;border:1px solid #d0d5e0;border-radius:5px">' +
+        '<label>Longo Prazo</label><input id="ed-d-lp"  type="number" value="' + r.lp   + '" style="padding:4px 8px;border:1px solid #d0d5e0;border-radius:5px">' +
+        '<label>Liquidação</label><input id="ed-d-liq"  type="number" value="' + r.liq  + '" style="padding:4px 8px;border:1px solid #d0d5e0;border-radius:5px">' +
+      '</div>';
+    btn.textContent = '✔ Salvar';
+    btn.style.background = '#1a3a6e';
+    btn.onclick = function() {
+      var desc = parseFloat(document.getElementById('ed-d-desc').value)||0;
+      var ant  = parseFloat(document.getElementById('ed-d-ant').value) ||0;
+      var lp   = parseFloat(document.getElementById('ed-d-lp').value)  ||0;
+      var liq  = parseFloat(document.getElementById('ed-d-liq').value) ||0;
+      var pipe = desc + ant + lp;
+      var net  = pipe + liq;
+      // Atualiza no STORE_KEY
+      var store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+      var si = store.findIndex(function(x){ return x.agency===r.agency && x.date===r.date; });
+      if (si >= 0) {
+        store[si].prodDesconto    = desc;
+        store[si].antDemais       = ant;
+        store[si].longoPrazo      = lp;
+        store[si].liquidacaoTotal = liq;
+        store[si].vopDia          = pipe;
+        store[si].netDia          = net;
+        localStorage.setItem(STORE_KEY, JSON.stringify(store));
+      }
+      // Atualiza também no PROD_KEY os gerentes do mesmo dia/agência
+      var prodStore = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
+      var updated = false;
+      prodStore.forEach(function(pr) {
+        if (pr.agency === r.agency && pr.date === r.date) {
+          // Redistribui proporcionalmente se houver múltiplos gerentes
+          updated = true;
+        }
+      });
+      if (updated) localStorage.setItem(PROD_KEY, JSON.stringify(prodStore));
+      modal.style.display = 'none';
+      btn.textContent = 'Excluir';
+      btn.style.background = '';
+      showToast('✅ ' + r.agency + ' — ' + d+'/'+m+'/'+y + ' atualizado!');
+      };
+    modal.style.display = 'flex';
+  }
+
   function renderDiario() {
     const mes   = document.getElementById('diario-mes').value;
     const dia   = document.getElementById('diario-dia') ? document.getElementById('diario-dia').value : '';
     const agFil = document.getElementById('diario-filtro-ag').value;
     const tbody = document.getElementById('tbody-diario-prod');
+
+    // Exige agência selecionada
+    if (!agFil) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:20px">Selecione uma agência para ver o histórico</td></tr>';
+      return;
+    }
     if (!mes && !dia) {
       tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#aaa;padding:14px">Selecione o mês ou um dia específico</td></tr>';
       return;
     }
 
-    const diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-    const prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
+    // Lê PROD_KEY (gerentes) + STORE_KEY (agência) e consolida por dia
+    const filtMes = dia ? dia.slice(0,7) : mes;
+    const prodRows = JSON.parse(localStorage.getItem(PROD_KEY)||'[]')
+      .filter(r => r.agency===agFil && r.date && r.date.startsWith(filtMes) && (!dia||r.date===dia));
+    const diarRows2 = JSON.parse(localStorage.getItem(STORE_KEY)||'[]')
+      .filter(r => r.agency===agFil && r.date && r.date.startsWith(filtMes) && (!dia||r.date===dia));
 
-    // Filtrar por dia específico (prioridade) ou mês
-    const filtroData = r => dia ? r.date === dia : (mes ? r.date && r.date.startsWith(mes) : true);
-    let diarRows = diarStore.filter(r => filtroData(r));
-    let prodRows = prodStore.filter(r => filtroData(r));
-    if (agFil) { diarRows = diarRows.filter(r => r.agency === agFil); prodRows = prodRows.filter(r => r.agency === agFil); }
-
-    // Agrupa por data + agência + gerente — soma se mesmo nome no mesmo dia
-    const byKey = {};
-    const addRow = (r, isProd) => {
-      const ger = r.gerente || r.agency;
-      const key = r.date + '||' + r.agency + '||' + ger;
-      if (!byKey[key]) byKey[key] = { date: r.date, agency: r.agency, gerente: ger, desc:0, ant:0, lp:0, liq:0, pipe:0, net:0 };
-      if (isProd) {
-        byKey[key].desc += Number(r.prodDesconto)||0;
-        byKey[key].ant  += Number(r.antDemais)||0;
-        byKey[key].lp   += Number(r.longoPrazo)||0;
-        byKey[key].liq  += Number(r.liquidacaoTotal)||0;
-        byKey[key].pipe += Number(r.pipe)||0;
-        byKey[key].net  += Number(r.netProjetado)||0;
-      } else {
-        byKey[key].desc += Number(r.prodDesconto)||0;
-        byKey[key].ant  += Number(r.antDemais)||0;
-        byKey[key].lp   += Number(r.longoPrazo)||0;
-        byKey[key].liq  += Number(r.liquidacaoTotal)||0;
-        const pipe = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
-        byKey[key].pipe += pipe;
-        byKey[key].net  += Number(r.netDia)||(pipe+(Number(r.liquidacaoTotal)||0));
+    // Consolida por DIA — soma todos os gerentes
+    const porDia = {};
+    prodRows.forEach(r => {
+      if (!porDia[r.date]) porDia[r.date] = { date:r.date, desc:0, ant:0, lp:0, liq:0, netProjMes:0, fonte:'ger' };
+      porDia[r.date].desc += Number(r.prodDesconto)||0;
+      porDia[r.date].ant  += Number(r.antDemais)||0;
+      porDia[r.date].lp   += Number(r.longoPrazo)||0;
+      porDia[r.date].liq  += Number(r.liquidacaoTotal)||0;
+    });
+    // Dias sem gerentes — usa STORE_KEY; pega netProjMes do STORE_KEY
+    diarRows2.forEach(r => {
+      if (!porDia[r.date]) {
+        porDia[r.date] = { date:r.date, desc:Number(r.prodDesconto)||0, ant:Number(r.antDemais)||0, lp:Number(r.longoPrazo)||0, liq:Number(r.liquidacaoTotal)||0, netProjMes:0, fonte:'ag' };
       }
-    };
+      if (r.netProjMes) porDia[r.date].netProjMes = Number(r.netProjMes)||0;
+    });
 
-    diarRows.forEach(r => addRow(r, false));
-    prodRows.forEach(r => addRow(r, true));
-
-    const allRows = Object.values(byKey);
-
-    // Recalcula pipe e net a partir dos somados
-    allRows.forEach(r => {
-      r.pipe = r.desc + r.ant + r.lp;
-      r.net  = r.pipe + r.liq;
+    const allRows = Object.values(porDia).map(r => {
+      const pipe = r.desc+r.ant+r.lp, net = pipe+r.liq;
+      return { ...r, pipe, net };
     });
 
     if (!allRows.length) {
@@ -1524,72 +1426,228 @@
       return;
     }
 
-    // Ordena: data desc → agência → gerente
-    allRows.sort((a,b) => b.date.localeCompare(a.date) || a.agency.localeCompare(b.agency) || a.gerente.localeCompare(b.gerente));
+    allRows.sort((a,b) => b.date.localeCompare(a.date));
 
     const totPipe = allRows.reduce((s,r) => s + r.pipe, 0);
     const totNet  = allRows.reduce((s,r) => s + r.net,  0);
 
-    tbody.innerHTML = allRows.map(r => {
+    // Salva em global para edição
+    window._diarioRows = allRows;
+
+    tbody.innerHTML = allRows.map((r, idx) => {
       const [y,m,d] = r.date.split('-');
       const nc = r.net >= 0 ? 'pos' : 'neg';
-      return `<tr>
+      return `<tr id="diario-tr-${idx}">
         <td class="ag" style="white-space:nowrap">${d}/${m}/${y}</td>
         <td style="font-weight:600;color:#1a3a6e">${r.agency}</td>
-        <td>${r.gerente}</td>
-        <td style="text-align:right">${fmtBRL(r.desc)}</td>
-        <td style="text-align:right">${fmtBRL(r.ant)}</td>
-        <td style="text-align:right">${fmtBRL(r.lp)}</td>
-        <td style="text-align:right;color:${r.liq < 0 ? '#b92d2d' : '#555'}">${fmtBRL(r.liq)}</td>
-        <td class="auto-val" style="text-align:right">${fmtBRL(r.pipe)}</td>
-        <td class="${nc}" style="text-align:right">${fmtBRL(r.net)}</td>
+        <td style="text-align:right" id="dd-desc-${idx}">${fmtBRL(r.desc)}</td>
+        <td style="text-align:right" id="dd-ant-${idx}">${fmtBRL(r.ant)}</td>
+        <td style="text-align:right" id="dd-lp-${idx}">${fmtBRL(r.lp)}</td>
+        <td style="text-align:right;color:${r.liq < 0 ? '#b92d2d' : '#555'}" id="dd-liq-${idx}">${fmtBRL(r.liq)}</td>
+        <td class="auto-val" style="text-align:right" id="dd-pipe-${idx}">${fmtBRL(r.pipe)}</td>
+        <td class="${nc}" style="text-align:right" id="dd-net-${idx}">${fmtBRL(r.net)}</td>
+        <td class="${(r.netProjMes||0) >= 0 ? 'pos' : 'neg'}" style="text-align:right" id="dd-np-${idx}">${fmtBRL(r.netProjMes||0)}</td>
+        <td style="text-align:center;white-space:nowrap">
+          <button class="btn-salvar-ger" style="background:#e67e22;font-size:10px;padding:3px 8px" onclick="abrirEdicaoDiario(${idx})">✏️</button>
+        </td>
       </tr>`;
     }).join('') + `<tr style="background:#1a3a6e;color:#fff;font-weight:700">
-      <td colspan="7" style="text-align:right;color:#fff;padding:6px 9px">TOTAL</td>
+      <td colspan="6" style="text-align:right;color:#fff;padding:6px 9px">TOTAL</td>
       <td style="text-align:right;color:#fff;padding:6px 9px">${fmtBRL(totPipe)}</td>
       <td style="text-align:right;color:${totNet>=0?'#90ee90':'#ff9999'};padding:6px 9px">${fmtBRL(totNet)}</td>
+      <td></td><td></td>
     </tr>`;
+  }
+
+  function abrirEdicaoDia() {
+    const dia = document.getElementById('prod-dia-limpar').value;
+    if (!dia) { showToast('⚠️ Selecione um dia para editar.', true); return; }
+    const card = document.getElementById('card-edicao-dia');
+    card.style.display = 'block';
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    renderEdicaoDia(dia);
+  }
+
+  function fecharEdicaoDia() {
+    document.getElementById('card-edicao-dia').style.display = 'none';
+  }
+
+  function renderEdicaoDia(dia) {
+    const cont = document.getElementById('edicao-dia-content');
+    const [y,m,d] = dia.split('-');
+
+    // Lê lançamentos do PROD_KEY do dia
+    const prodStore = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
+    const rows = prodStore.filter(r => r.date === dia);
+
+    if (!rows.length) {
+      cont.innerHTML = '<div style="color:#aaa;font-size:12px;text-align:center;padding:16px">Nenhum lançamento em ' + d+'/'+m+'/'+y + '</div>';
+      return;
+    }
+
+    cont.innerHTML = `
+      <div style="font-size:11px;color:#1a3a6e;font-weight:600;margin-bottom:10px">📅 ${d}/${m}/${y}</div>
+      <div class="tbl-wrap">
+      <table class="gd-table">
+        <thead><tr>
+          <th>Agência</th>
+          <th>Gerente</th>
+          <th style="text-align:right">Prod.Desc</th>
+          <th style="text-align:right">Ant/Demais</th>
+          <th style="text-align:right">Longo Prazo</th>
+          <th style="text-align:right">Liquidação</th>
+          <th style="text-align:right">VOP ⚡</th>
+          <th style="text-align:right">Net ⚡</th>
+          <th>Ação</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map((r, i) => {
+            const pipe = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+            const net  = pipe + (Number(r.liquidacaoTotal)||0);
+            const nc   = net >= 0 ? '#0d7a5f' : '#b92d2d';
+            return `<tr id="edit-row-${i}">
+              <td style="font-weight:600;color:#1a3a6e">${r.agency}</td>
+              <td style="font-weight:600">${r.gerente||'—'}</td>
+              <td><input class="gd-table input" id="ed-desc-${i}" type="number" value="${r.prodDesconto||0}" oninput="calcEdRow(${i})"></td>
+              <td><input class="gd-table input" id="ed-ant-${i}"  type="number" value="${r.antDemais||0}"   oninput="calcEdRow(${i})"></td>
+              <td><input class="gd-table input" id="ed-lp-${i}"   type="number" value="${r.longoPrazo||0}"  oninput="calcEdRow(${i})"></td>
+              <td><input class="gd-table input" id="ed-liq-${i}"  type="number" value="${r.liquidacaoTotal||0}" oninput="calcEdRow(${i})"></td>
+              <td id="ed-vop-${i}" style="text-align:right;font-weight:700;color:#185FA5">${fmtBRL(pipe)}</td>
+              <td id="ed-net-${i}" style="text-align:right;font-weight:700;color:${nc}">${fmtBRL(net)}</td>
+              <td style="white-space:nowrap">
+                <button class="btn-gd-save" onclick="salvarEdicaoGerDia(${i},'${dia}','${r.agency}','${r.gerente||''}')">✔ Salvar</button>
+                <button class="btn-gd-del"  onclick="excluirLancGerDia('${dia}','${r.agency}','${r.gerente||''}')">🗑</button>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      </div>`;
+  }
+
+  function calcEdRow(i) {
+    const desc = parseFloat(document.getElementById('ed-desc-'+i).value)||0;
+    const ant  = parseFloat(document.getElementById('ed-ant-'+i).value) ||0;
+    const lp   = parseFloat(document.getElementById('ed-lp-'+i).value)  ||0;
+    const liq  = parseFloat(document.getElementById('ed-liq-'+i).value) ||0;
+    const pipe = desc + ant + lp;
+    const net  = pipe + liq;
+    const vEl  = document.getElementById('ed-vop-'+i);
+    const nEl  = document.getElementById('ed-net-'+i);
+    if (vEl) vEl.textContent = fmtBRL(pipe);
+    if (nEl) { nEl.textContent = fmtBRL(net); nEl.style.color = net >= 0 ? '#0d7a5f' : '#b92d2d'; }
+  }
+
+  function salvarEdicaoGerDia(i, dia, agency, gerente) {
+    const desc = parseFloat(document.getElementById('ed-desc-'+i).value)||0;
+    const ant  = parseFloat(document.getElementById('ed-ant-'+i).value) ||0;
+    const lp   = parseFloat(document.getElementById('ed-lp-'+i).value)  ||0;
+    const liq  = parseFloat(document.getElementById('ed-liq-'+i).value) ||0;
+    const pipe = desc + ant + lp;
+    const net  = pipe + liq;
+
+    let store = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
+    const idx = store.findIndex(r => r.date === dia && r.agency === agency && (r.gerente||'') === gerente);
+    if (idx >= 0) {
+      store[idx] = { ...store[idx], prodDesconto: desc, antDemais: ant, longoPrazo: lp, liquidacaoTotal: liq, pipe, netProjetado: net };
+      localStorage.setItem(PROD_KEY, JSON.stringify(store));
+      showToast('✅ Lançamento de ' + (gerente||agency) + ' atualizado!');
+      renderProdutividade();
+    } else {
+      showToast('⚠️ Registro não encontrado.', true);
+    }
+  }
+
+  function excluirLancGerDia(dia, agency, gerente) {
+    const modal = document.getElementById('del-modal');
+    const msg   = document.getElementById('del-modal-msg');
+    const btn   = document.getElementById('del-modal-btn');
+    msg.innerHTML = 'Excluir lançamento de <strong>' + (gerente||agency) + '</strong> em ' + dia + '?<br><small style="color:#888">Remove da produção diária e do lançamento por gerente.</small>';
+    btn.onclick = function() {
+      modal.style.display = 'none';
+      excluirSincronizado(agency, dia, gerente);
+      showToast('🗑 Removido de ambas as abas!');
+      renderEdicaoDia(dia);
+      renderProdutividade();
+      };
+    modal.style.display = 'flex';
+  }
+
+  function limparTodosGerente(gerente) {
+    if (!gerente) { showToast('⚠️ Informe o nome do gerente.', true); return; }
+    const modal = document.getElementById('del-modal');
+    const msg   = document.getElementById('del-modal-msg');
+    const btn   = document.getElementById('del-modal-btn');
+    msg.innerHTML = 'Deseja apagar <strong>TODOS</strong> os lançamentos de:<br><br>' +
+      '👤 <strong>' + gerente + '</strong><br><br>' +
+      '<span style="color:#b92d2d;font-size:11px">Remove de TODOS os meses e todas as abas.</span>';
+    btn.onclick = function() {
+      modal.style.display = 'none';
+      // Remove do PROD_KEY
+      let prodStore = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
+      const antProd = prodStore.length;
+      prodStore = prodStore.filter(r => (r.gerente||'').toLowerCase() !== gerente.toLowerCase());
+      localStorage.setItem(PROD_KEY, JSON.stringify(prodStore));
+      // Remove do STORE_KEY
+      let diarStore = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+      const antDiar = diarStore.length;
+      diarStore = diarStore.filter(r => (r.gerente||'').toLowerCase() !== gerente.toLowerCase());
+      localStorage.setItem(STORE_KEY, JSON.stringify(diarStore));
+      const removidos = (antProd - prodStore.length) + (antDiar - diarStore.length);
+      showToast('🗑 ' + removidos + ' lançamento(s) de ' + gerente + ' removidos!');
+      renderProdutividade();
+      };
+    modal.style.display = 'flex';
   }
 
   function limparProdMes() {
     const mes = document.getElementById('prod-mes').value;
-    if (!mes) return;
-    const [y,m] = mes.split('-');
-    if (!confirm('Apagar TODOS os lançamentos do mês ' + m + '/' + y + '?\nIsso inclui a produção diária e a aba Produtividade.')) return;
+    const dia = document.getElementById('prod-dia-limpar') ? document.getElementById('prod-dia-limpar').value : '';
 
-    // Limpa STORE_KEY (produção diária)
-    let store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-    store = store.filter(r => r.date && !r.date.startsWith(mes));
-    lsSetItem(STORE_KEY, JSON.stringify(store));
+    if (!mes && !dia) { showToast('⚠️ Selecione o mês ou um dia.', true); return; }
 
-    // Limpa PROD_KEY (aba produtividade por gerente)
-    let prodStore = JSON.parse(lsGetItem(PROD_KEY) || '[]');
-    prodStore = prodStore.filter(r => r.date && !r.date.startsWith(mes));
-    lsSetItem(PROD_KEY, JSON.stringify(prodStore));
+    const modal = document.getElementById('del-modal');
+    const msg   = document.getElementById('del-modal-msg');
+    const btn   = document.getElementById('del-modal-btn');
 
-    // Limpa também os saldos mensais de todas as agências
-    lsSetItem(SALDOS_KEY, JSON.stringify({}));
+    let label = '';
+    if (dia) {
+      const [y,m,d] = dia.split('-');
+      label = 'dia <strong>' + d + '/' + m + '/' + y + '</strong>';
+    } else {
+      const [y,m] = mes.split('-');
+      label = 'mês <strong>' + m + '/' + y + '</strong>';
+    }
 
-    showToast('🗑 Todos os dados do mês apagados.');
-    renderProdutividade();
-    renderDiario();
+    msg.innerHTML = 'Apagar TODOS os lançamentos do ' + label + '?<br><br>' +
+      '<span style="color:#b92d2d;font-size:11px">Inclui produção diária e aba Produtividade.</span>';
 
-    // Limpa campos de cima na aba Lançar Produção
-    ['m-metaVop','m-descIni','m-quenteIni','m-arvIni','m-liqIni','m-netDiaAnt']
-      .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-    calcTudo();
+    btn.onclick = function() {
+      modal.style.display = 'none';
+      const filtro = r => dia ? r.date === dia : (mes ? r.date && r.date.startsWith(mes) : false);
 
-    // Atualiza a tabela de input se agência estiver selecionada
-    const agSel = document.getElementById('prod-agency');
-    if (agSel && agSel.value) renderGerentesAgencia();
+      let store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+      store = store.filter(r => !filtro(r));
+      localStorage.setItem(STORE_KEY, JSON.stringify(store));
+
+      let prodStore = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
+      prodStore = prodStore.filter(r => !filtro(r));
+      localStorage.setItem(PROD_KEY, JSON.stringify(prodStore));
+
+      showToast('🗑 Dados apagados!');
+      renderProdutividade();
+        const agSel = document.getElementById('prod-agency');
+      if (agSel && agSel.value) renderGerentesAgencia();
+    };
+    modal.style.display = 'flex';
   }
 
   // ── Gerentes ────────────────────────────────────────────
   function carregarGerentes() {
-    return JSON.parse(lsGetItem(GER_KEY) || '[]');
+    return JSON.parse(localStorage.getItem(GER_KEY) || '[]');
   }
   function salvarGerentes(lista) {
-    lsSetItem(GER_KEY, JSON.stringify(lista));
+    localStorage.setItem(GER_KEY, JSON.stringify(lista));
   }
   function gerentesDaAgencia(ag) {
     return carregarGerentes().filter(g => g.agencia === ag);
@@ -1641,10 +1699,8 @@
     renderGerTable();
   }
   function atualizarSelectGerente() {
-    const agEl = document.getElementById('gg-agency');
-    const sel  = document.getElementById('gg-gerente');
-    if (!agEl || !sel) return; // aba GG não está ativa ainda
-    const ag = agEl.value;
+    const ag  = (document.getElementById('gg-agency')||{value:''}).value;
+    const sel = document.getElementById('gg-gerente');
     sel.innerHTML = '<option value="">— Selecione —</option>';
     if (!ag) return;
     gerentesDaAgencia(ag).forEach(g => {
@@ -1657,18 +1713,18 @@
 
   // ── GG Lançamentos ───────────────────────────────────────
   function carregarGGDia(date) {
-    return JSON.parse(lsGetItem(GG_KEY) || '[]').filter(r => r.date === date);
+    return JSON.parse(localStorage.getItem(GG_KEY) || '[]').filter(r => r.date === date);
   }
   function salvarGGLocal(payload) {
-    let store = JSON.parse(lsGetItem(GG_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(GG_KEY) || '[]');
     store = store.filter(r => !(r.agency === payload.agency && r.gerente === payload.gerente && r.date === payload.date));
     store.push(payload);
-    lsSetItem(GG_KEY, JSON.stringify(store));
+    localStorage.setItem(GG_KEY, JSON.stringify(store));
   }
 
   function calcGG() {
     const contasEl = document.getElementById('gg-contas'); const contas = contasEl ? (parseInt(contasEl.value)||0) : 0;
-    const agend  = parseInt(document.getElementById('gg-agend').value)  || 0;
+    const agend  = parseInt((document.getElementById('gg-agend')||{value:''}).value)  || 0;
     const pctC   = Math.round((contas / META_DIARIA) * 100);
     const pctA   = Math.round((agend  / META_DIARIA) * 100);
     const elC = document.getElementById('gg-contas-pct'); if(!elC) return;
@@ -1679,11 +1735,11 @@
   }
 
   function submitGG() {
-    const agency  = document.getElementById('gg-agency').value;
-    const gerente = document.getElementById('gg-gerente').value;
-    const date    = document.getElementById('gg-date').value;
-    const contas  = parseInt(document.getElementById('gg-contas').value) || 0;
-    const agend   = parseInt(document.getElementById('gg-agend').value)  || 0;
+    const agency  = (document.getElementById('gg-agency')||{value:''}).value;
+    const gerente = (document.getElementById('gg-gerente')||{value:''}).value;
+    const date    = (document.getElementById('gg-date')||{value:''}).value;
+    const contas  = parseInt((document.getElementById('gg-contas')||{value:''}).value) || 0;
+    const agend   = parseInt((document.getElementById('gg-agend')||{value:''}).value)  || 0;
     if (!agency)  { showToast('⚠️ Selecione a agência!', true); return; }
     if (!gerente) { showToast('⚠️ Selecione o gerente!', true); return; }
     if (!date)    { showToast('⚠️ Informe a data!', true); return; }
@@ -1699,21 +1755,21 @@
 
   function clearGG() {
     const gcEl = document.getElementById('gg-contas'); if(gcEl) gcEl.value = '';
-    document.getElementById('gg-agend').value  = '';
+    (document.getElementById('gg-agend')||{value:''}).value  = '';
     calcGG();
   }
 
   function limparGGDia() {
-    const ag  = document.getElementById('gg-agency').value;
-    const ger = document.getElementById('gg-gerente').value;
-    const dt  = document.getElementById('gg-date').value;
+    const ag  = (document.getElementById('gg-agency')||{value:''}).value;
+    const ger = (document.getElementById('gg-gerente')||{value:''}).value;
+    const dt  = (document.getElementById('gg-date')||{value:''}).value;
     if (!ag || !ger) { showToast('⚠️ Selecione agência e gerente.', true); return; }
     if (!confirm('Apagar o lançamento de ' + ger + ' em ' + ag + '?')) return;
-    let store = JSON.parse(lsGetItem(GG_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(GG_KEY) || '[]');
     store = store.filter(r => !(r.agency === ag && r.gerente === ger && r.date === dt));
-    lsSetItem(GG_KEY, JSON.stringify(store));
+    localStorage.setItem(GG_KEY, JSON.stringify(store));
     showToast('🗑 Lançamento removido.');
-    const dtAtual = document.getElementById('gg-date').value;
+    const dtAtual = (document.getElementById('gg-date')||{value:''}).value;
     renderRetorno(dtAtual);
     carregarGGResumo();
   }
@@ -1773,7 +1829,7 @@
   }
 
   function carregarGGResumo() {
-    const date  = document.getElementById('gg-date').value;
+    const date  = (document.getElementById('gg-date')||{value:''}).value;
     const tbody = document.getElementById('tbody-gg-resumo');
     if (!date) return;
 
@@ -1827,8 +1883,8 @@
     const mes  = date ? date.slice(0,7) : new Date().toISOString().slice(0,7);
 
     // Agrupa VOP por agência+gerente — soma, sem duplicar mesma data+gerente
-    const prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
-    const diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    const prodStore = JSON.parse(localStorage.getItem(PROD_KEY)  || '[]');
+    const diarStore = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
 
     const byKey = {};  // key = agency||gerente||date para deduplicar
 
@@ -1911,9 +1967,9 @@
     const date = document.getElementById('painel-date').value;
     const [y,m,d] = date.split('-');
     if (!confirm('Apagar TODOS os lançamentos GG do dia ' + d+'/'+m+'/'+y + '?')) return;
-    let store = JSON.parse(lsGetItem(GG_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(GG_KEY) || '[]');
     store = store.filter(r => r.date !== date);
-    lsSetItem(GG_KEY, JSON.stringify(store));
+    localStorage.setItem(GG_KEY, JSON.stringify(store));
     showToast('🗑 Lançamentos GG do dia apagados.');
     carregarPainel();
   }
@@ -1926,18 +1982,14 @@
   const STORE_KEY      = 'lancamentos_agencias';
   const SALDOS_KEY     = 'saldos_mensais_agencias';
 
-  // ── Called after storage is loaded ──
-  // Variável global acessível por todas as funções
-  let today = new Date().toISOString().split('T')[0];
-
-  function _initAppUI() {
-  today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0];
 
   document.getElementById('ref-date').value    = today;
   document.getElementById('painel-date').value = today;
-  document.getElementById('gg-date') && (document.getElementById('gg-date').value = today);
-  // Inicializa dashboard com total do dia
+  var _ggDate = document.getElementById('gg-date'); if (_ggDate) _ggDate.value = today;
+  // Inicializa dashboard com acumulado do mês — atualiza a cada 30s
   setTimeout(() => atualizarDashTotal(today), 200);
+  setInterval(() => atualizarDashTotal((document.getElementById('ref-date')||{value:today}).value||today), 30000);
 
   const _prodDataEl = document.getElementById('prod-data');
   if (_prodDataEl) _prodDataEl.value = today;
@@ -1954,7 +2006,6 @@
     const dt = new Date(y,m-1,d);
     document.getElementById('header-date').textContent = `${dias[dt.getDay()]}, ${d}/${m}/${y}`;
   })();
-  } // end _initAppUI
 
   // Salva os valores iniciais de cima ao digitar — persiste sem precisar enviar
   function salvarIniciaisCima() {
@@ -1984,30 +2035,196 @@
 
   function resetarMes(e) {
     if (e) e.preventDefault();
-    novoMes();
-  }
-
-  function novoMes() {
     const agency = document.getElementById('agency-select').value;
     if (!agency) { showToast('⚠️ Selecione a agência primeiro.', true); return; }
-    if (!confirm(
-      '📅 Iniciar Novo Mês para ' + agency + '?\n\n' +
-      '• Os valores iniciais (Meta VOP, Desc., Quente, ARV, Liq.) serão limpos\n' +
-      '• Os lançamentos diários desta agência NÃO serão apagados\n\n' +
-      'Confirma?'
-    )) return;
-
-    // Remove saldos mensais apenas desta agência
-    let saldos = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
-    delete saldos[agency];
-    lsSetItem(SALDOS_KEY, JSON.stringify(saldos));
-
-    // Limpa campos de cima visualmente
+    if (!confirm('Redefinir os valores iniciais de ' + agency + ' para o novo mês?\nOs campos de cima serão limpos.')) return;
+    // Remove saldos mensais da agência
+    let store = JSON.parse(localStorage.getItem(SALDOS_KEY) || '{}');
+    delete store[agency];
+    localStorage.setItem(SALDOS_KEY, JSON.stringify(store));
+    // Limpa campos de cima
     ['m-metaVop','m-descIni','m-quenteIni','m-arvIni','m-liqIni','m-netDiaAnt']
       .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+    calcTudo();
+    showToast('✅ Pronto! Preencha os valores iniciais do novo mês.');
+  }
+
+  function editarQuadroMensal() {
+    // Habilita todos os inputs do quadro mensal para edição
+    const campos = ['m-metaVop','m-descIni','m-quenteIni','m-arvIni','m-liqIni','m-netDiaAnt'];
+    campos.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.removeAttribute('disabled');
+        el.style.background = '#fffbea';
+        el.style.borderColor = '#e67e22';
+      }
+    });
+    showToast('✏️ Campos habilitados para edição. Salva automaticamente ao digitar.');
+  }
+
+  function atualizarCamposComGerentes() {
+    // Preenche os campos do quadro diário com a soma da prod dos gerentes
+    const ag   = (document.getElementById('agency-select')||{value:''}).value;
+    const date = (document.getElementById('ref-date')||{value:''}).value;
+    if (!ag || !date) return;
+
+    const prod = JSON.parse(localStorage.getItem('lancamentos_prod_gerente')||'[]')
+      .filter(function(r){ return r.agency===ag && r.date===date; });
+
+    if (!prod.length) return; // sem gerentes, não altera
+
+    const gerDesc = prod.reduce(function(s,r){ return s+(Number(r.prodDesconto)||0); }, 0);
+    const gerAnt  = prod.reduce(function(s,r){ return s+(Number(r.antDemais)||0); }, 0);
+    const gerLp   = prod.reduce(function(s,r){ return s+(Number(r.longoPrazo)||0); }, 0);
+    const gerLiq  = prod.reduce(function(s,r){ return s+(Number(r.liquidacaoTotal)||0); }, 0);
+
+    // Preenche os campos diretamente com os valores dos gerentes
+    function setField(id, val) {
+      const el = document.getElementById(id);
+      if (el && val !== 0) el.value = val;
+    }
+    setField('d-desc', gerDesc);
+    setField('d-ant',  gerAnt);
+    setField('d-lp',   gerLp);
+    setField('d-liq',  gerLiq);
+
+    // Destaca os campos preenchidos pelos gerentes
+    ['d-desc','d-ant','d-lp','d-liq'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.style.background   = '#f0fff8';
+        el.style.borderColor  = '#0d7a5f';
+        el.title = 'Preenchido automaticamente pela prod dos gerentes';
+      }
+    });
 
     calcTudo();
-    showToast('✅ Novo mês iniciado para ' + agency + '! Preencha os valores iniciais.');
+  }
+
+  function atualizarPainelGerentes() {
+    const ag   = (document.getElementById('agency-select')||{value:''}).value;
+    const date = (document.getElementById('ref-date')||{value:''}).value;
+    const painel = document.getElementById('painel-gerentes-lancar');
+    if (!painel) return;
+
+    if (!ag || !date) { painel.style.display='none'; return; }
+
+    const gers = gerentesDaAgencia(ag);
+    if (!gers.length) { painel.style.display='none'; return; }
+
+    painel.style.display = 'block';
+    document.getElementById('pg-agencia-nome').textContent = ag;
+    const [y,m,d] = date.split('-');
+    document.getElementById('pg-data-nome').textContent = d+'/'+m+'/'+y;
+
+    const prod = JSON.parse(localStorage.getItem('lancamentos_prod_gerente')||'[]')
+      .filter(function(r){ return r.agency===ag && r.date===date; });
+    const salvoMap = {};
+    prod.forEach(function(r){ salvoMap[r.gerente] = r; });
+
+    var totVop = 0, totNet = 0;
+    var rows = '';
+    gers.forEach(function(g) {
+      const s    = salvoMap[g.nome];
+      const saved = !!s;
+      const desc = s ? (s.prodDesconto||0) : '';
+      const ant  = s ? (s.antDemais||0)    : '';
+      const lp   = s ? (s.longoPrazo||0)   : '';
+      const liq  = s ? (s.liquidacaoTotal||0) : '';
+      const vop  = s ? ((Number(s.prodDesconto)||0)+(Number(s.antDemais)||0)+(Number(s.longoPrazo)||0)) : 0;
+      const net  = s ? (vop + (Number(s.liquidacaoTotal)||0)) : 0;
+      const nc   = net >= 0 ? '#0d7a5f' : '#b92d2d';
+      if (saved) { totVop += vop; totNet += net; }
+
+      rows += '<tr id="pgr-tr-'+g.nome.replace(/\s/g,'_')+'" style="'+(saved?'background:#f0fff8':'')+'">' +
+        '<td class="ag">'+g.nome+(saved?' ✅':'')+' </td>' +
+        '<td><input class="prod-input pg-desc" type="number" placeholder="0" value="'+desc+'" oninput="calcPgRow(this)"></td>' +
+        '<td><input class="prod-input pg-ant"  type="number" placeholder="0" value="'+ant+'"  oninput="calcPgRow(this)"></td>' +
+        '<td><input class="prod-input pg-lp"   type="number" placeholder="0" value="'+lp+'"   oninput="calcPgRow(this)"></td>' +
+        '<td><input class="prod-input pg-liq"  type="number" placeholder="0" value="'+liq+'"  oninput="calcPgRow(this)"></td>' +
+        '<td class="auto-val pg-vop" style="text-align:right">'+(saved?fmtBRL(vop):'R$ 0')+'</td>' +
+        '<td style="text-align:right;font-weight:700;color:'+nc+'" class="pg-net">'+(saved?fmtBRL(net):'R$ 0')+'</td>' +
+        '<td style="text-align:center;white-space:nowrap">' +
+          '<button class="btn-salvar-ger" data-agency="'+ag+'" data-gerente="'+g.nome+'" data-date="'+date+'" onclick="salvarPgGerente(this)">Salvar</button> ' +
+          '<button class="btn-gd-del" data-agency="'+ag+'" data-gerente="'+g.nome+'" data-date="'+date+'" onclick="removerPgGerente(this)" title="Excluir">🗑</button>' +
+        '</td>' +
+        '</tr>';
+    });
+
+    document.getElementById('tbody-gerentes-lancar').innerHTML = rows;
+
+    const totEl = document.getElementById('pg-total');
+    if (totVop > 0) {
+      totEl.style.display = 'block';
+      document.getElementById('pg-total-vop').textContent = fmtBRL(totVop);
+      const el = document.getElementById('pg-total-net');
+      el.textContent = fmtBRL(totNet);
+      el.style.color = totNet >= 0 ? '#0d7a5f' : '#b92d2d';
+    } else {
+      totEl.style.display = 'none';
+    }
+    calcTudo();
+  }
+
+  function calcPgRow(input) {
+    const tr  = input.closest('tr');
+    if (!tr) return;
+    const desc = parseFloat(tr.querySelector('.pg-desc')?.value)||0;
+    const ant  = parseFloat(tr.querySelector('.pg-ant')?.value) ||0;
+    const lp   = parseFloat(tr.querySelector('.pg-lp')?.value)  ||0;
+    const liq  = parseFloat(tr.querySelector('.pg-liq')?.value) ||0;
+    const vop  = desc + ant + lp;
+    const net  = vop + liq;
+    const vEl  = tr.querySelector('.pg-vop');
+    const nEl  = tr.querySelector('.pg-net');
+    if (vEl) vEl.textContent = fmtBRL(vop);
+    if (nEl) { nEl.textContent = fmtBRL(net); nEl.style.color = net>=0?'#0d7a5f':'#b92d2d'; }
+    calcTudo();
+  }
+
+  function salvarPgGerente(btn) {
+    const tr      = btn.closest('tr');
+    const agency  = btn.getAttribute('data-agency');
+    const gerente = btn.getAttribute('data-gerente');
+    const date    = btn.getAttribute('data-date');
+    if (!agency||!gerente||!date) { showToast('⚠️ Dados incompletos', true); return; }
+    const desc = parseFloat(tr.querySelector('.pg-desc')?.value)||0;
+    const ant  = parseFloat(tr.querySelector('.pg-ant')?.value) ||0;
+    const lp   = parseFloat(tr.querySelector('.pg-lp')?.value)  ||0;
+    const liq  = parseFloat(tr.querySelector('.pg-liq')?.value) ||0;
+    const pipe = desc + ant + lp;
+    const net  = pipe + liq;
+    const payload = { agency, gerente, date, prodDesconto:desc, antDemais:ant, longoPrazo:lp, liquidacaoTotal:liq, pipe, netProjetado:net };
+    let store = JSON.parse(localStorage.getItem('lancamentos_prod_gerente')||'[]');
+    store = store.filter(function(r){ return !(r.agency===agency&&r.gerente===gerente&&r.date===date); });
+    store.push(payload);
+    localStorage.setItem('lancamentos_prod_gerente', JSON.stringify(store));
+    showToast('✅ '+gerente+' salvo!');
+    atualizarPainelGerentes();
+    atualizarCamposComGerentes();
+    renderGerentesAgencia && renderGerentesAgencia();
+    renderProdutividade && renderProdutividade();
+  }
+
+  function removerPgGerente(btn) {
+    const agency  = btn.getAttribute('data-agency');
+    const gerente = btn.getAttribute('data-gerente');
+    const date    = btn.getAttribute('data-date');
+    const modal   = document.getElementById('del-modal');
+    const msg     = document.getElementById('del-modal-msg');
+    const mbtn    = document.getElementById('del-modal-btn');
+    msg.innerHTML = 'Remover lançamento de <strong>'+gerente+'</strong>?';
+    mbtn.onclick  = function() {
+      modal.style.display = 'none';
+      excluirSincronizado(agency, date, gerente);
+      showToast('🗑 Removido!');
+      atualizarPainelGerentes();
+      atualizarCamposComGerentes();
+      renderGerentesAgencia && renderGerentesAgencia();
+      renderProdutividade && renderProdutividade();
+    };
+    modal.style.display = 'flex';
   }
 
   function syncNomes() {
@@ -2033,7 +2250,9 @@
           : ag ? 'Nenhum gerente cadastrado. Use 👥 para adicionar.' : '';
       }
       // Restaura último gerente usado nesta agência
-      // ref-gerente removido do HTML — sem ação necessária
+      const ultimo = localStorage.getItem('ultimo_gerente_' + ag);
+      var refGer = document.getElementById('ref-gerente');
+      if (ultimo && refGer && refGer.value === '') { refGer.value = ultimo; }
     }
 
     // Limpa campos de baixo ao trocar de agência (não os de cima)
@@ -2051,12 +2270,13 @@
       });
 
     if (ag) preencherCima(ag);
-    calcTudo();
+    atualizarPainelGerentes();
+    atualizarCamposComGerentes();
   }
 
   function salvarUltimoGerente(nome) {
     const ag = document.getElementById('agency-select').value;
-    if (ag && nome) lsSetItem('ultimo_gerente_' + ag, nome);
+    if (ag && nome) localStorage.setItem('ultimo_gerente_' + ag, nome);
   }
 
   function fmtShort(v) {
@@ -2069,46 +2289,68 @@
     return n < 0 ? '(' + s + ')' : s;
   }
 
-  // Atualiza dashboard somando TODAS as agências do dia
+  // Atualiza dashboard — VOP acumulado do mês vs meta total
   function atualizarDashTotal(dateStr) {
     try {
       const date    = dateStr || document.getElementById('ref-date').value || today;
-      const store   = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-      const saldos  = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
-      const doDia   = store.filter(r => r.date === date);
+      const mes     = date.slice(0, 7); // YYYY-MM
+      const store   = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+      const saldos  = JSON.parse(localStorage.getItem(SALDOS_KEY) || '{}');
 
-      const totalVop  = doDia.reduce((s,r) => s + (Number(r.vopDia)||0), 0);
-      const totalNet  = doDia.reduce((s,r) => s + (Number(r.netDia)||0), 0);
+      // VOP acumulado = soma de TODOS os dias do mês (todos os lançamentos)
+      const doMes     = store.filter(r => r.date && r.date.startsWith(mes));
+      const totalVop  = doMes.reduce((s,r) => s + ((Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0)), 0);
+      const totalNet  = doMes.reduce((s,r) => s + (Number(r.netDia)||0), 0);
+
+      // Meta = soma das metas mensais de todas as agências
       const totalMeta = Object.values(saldos).reduce((s,ag) => s + (Number(ag.metaVopInicial)||0), 0);
 
-      atualizarDash(totalVop, totalMeta, totalVop, totalNet, totalNet);
+      // VOP do dia atual (para o card VOP Dia)
+      const doDia    = store.filter(r => r.date === date);
+      const vopDia   = doDia.reduce((s,r) => s + ((Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0)), 0);
+      const netDia   = doDia.reduce((s,r) => s + (Number(r.netDia)||0), 0);
+
+      // Net Acumulado = soma(saldoLiq + somaNetDia) de cada agência no mês
+      const AGENCIAS_DASH = ['Alphaville','Lapa','Osasco','Santana','Vila Maria','Sorocaba',
+                             'Tatuape','Cidade Jardim','Santo Amaro','JK','Itaim','Sumaré'];
+      const netAcumTotal = AGENCIAS_DASH.reduce((tot, ag) => {
+        const ac = calcAcumuladoMes(ag, mes);
+        if (!ac) return tot;
+        return tot + ac.saldoLiq + ac.somaNetDia;
+      }, 0);
+
+      atualizarDash(totalVop, totalMeta, vopDia, netDia, netAcumTotal);
     } catch(e) { console.error('atualizarDashTotal:', e); }
   }
 
   function atualizarDash(realVop, metaVop, vopDia, netDia, netAcum) {
     try {
-    // Relógio VOP
+    // Relógio
     const pct = metaVop > 0 ? Math.min((realVop / metaVop) * 100, 100) : 0;
     const circ = 2 * Math.PI * 15.9;
     const offset = circ - (pct / 100) * circ;
     const arc = document.getElementById('vop-arc');
     arc.style.strokeDasharray = circ + ' ' + circ;
     arc.style.strokeDashoffset = offset;
+    // cor do arco
     arc.style.stroke = pct >= 100 ? '#4ade80' : pct >= 70 ? '#facc15' : '#f87171';
-    document.getElementById('vop-clock-pct').textContent = Math.round(pct) + '%';
-    document.getElementById('dash-real').textContent = fmtShort(realVop);
-    document.getElementById('dash-meta').textContent = fmtShort(metaVop);
 
-    // Relógio Projeção (onde deveria estar hoje)
+    document.getElementById('vop-clock-pct').textContent = Math.round(pct) + '%';
+    document.getElementById('dash-real').textContent     = fmtBRL(realVop);
+    document.getElementById('dash-meta').textContent     = fmtBRL(metaVop);
+
+
+
+    // Relógio de projeção: VOP realizado vs onde deveria estar hoje
     try {
-      const now      = new Date();
-      const diaHoje  = now.getDate();
-      const diasMes  = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-      const metaHoje = metaVop > 0 ? Math.round((diaHoje / diasMes) * metaVop) : 0;
-      const pctProj  = metaHoje > 0 ? Math.min((realVop / metaHoje) * 100, 150) : 0;
-      const circP    = 2 * Math.PI * 15.9;
-      const offsetP  = circP - (Math.min(pctProj,100) / 100) * circP;
-      const arcP     = document.getElementById('proj-arc');
+      const now        = new Date();
+      const diaHoje    = now.getDate();
+      const diasMes    = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+      const metaHoje   = metaVop > 0 ? Math.round((diaHoje / diasMes) * metaVop) : 0;
+      const pctProj    = metaHoje > 0 ? Math.min((realVop / metaHoje) * 100, 150) : 0;
+      const circP      = 2 * Math.PI * 15.9;
+      const offsetP    = circP - (Math.min(pctProj,100) / 100) * circP;
+      const arcP       = document.getElementById('proj-arc');
       if (arcP) {
         arcP.style.strokeDasharray  = circP + ' ' + circP;
         arcP.style.strokeDashoffset = offsetP;
@@ -2117,33 +2359,31 @@
       const pctProjEl = document.getElementById('proj-clock-pct');
       if (pctProjEl) { pctProjEl.textContent = Math.round(pctProj) + '%'; pctProjEl.style.color = pctProj >= 100 ? '#4ade80' : pctProj >= 80 ? '#facc15' : '#f87171'; }
       const mhEl = document.getElementById('dash-meta-hoje');
-      if (mhEl) mhEl.textContent = fmtShort(metaHoje);
+      if (mhEl) mhEl.textContent = fmtBRL(metaHoje);
       const subEl = document.getElementById('dash-proj-sub');
       if (subEl) subEl.textContent = 'dia ' + diaHoje + ' de ' + diasMes;
     } catch(e) {}
 
     // VOP Dia
-    document.getElementById('dash-vopdia').textContent = fmtShort(vopDia);
+    document.getElementById('dash-vopdia').textContent   = fmtBRL(vopDia);
 
     // Net Dia
-    const ndEl = document.getElementById('dash-netdia');
-    ndEl.textContent = fmtShort(netDia);
-    ndEl.style.color = netDia >= 0 ? '#4ade80' : '#f87171';
+    const ndEl  = document.getElementById('dash-netdia');
+    ndEl.textContent = fmtBRL(netDia);
+    ndEl.style.color = netDia  >= 0 ? '#4ade80' : '#f87171';
     document.getElementById('dash-netdia-sub').textContent = netDia >= 0 ? '▲ positivo' : '▼ negativo';
-
-    // Net Proj Mês (regional)
     const npEl = document.getElementById('dash-netproj');
     if (npEl) {
       const npv = calcNetProjMesRegional();
-      npEl.textContent = fmtShort(npv);
+      npEl.textContent = fmtBRL(npv);
       npEl.style.color = npv >= 0 ? '#90ee90' : '#ff9999';
       const npSub = document.getElementById('dash-netproj-sub');
       if (npSub) npSub.textContent = npv >= 0 ? '▲ positivo' : '▼ negativo';
     }
 
     // Net Acumulado
-    const naEl = document.getElementById('dash-netacum');
-    naEl.textContent = fmtShort(netAcum);
+    const naEl  = document.getElementById('dash-netacum');
+    naEl.textContent = fmtBRL(netAcum);
     naEl.style.color = netAcum >= 0 ? '#4ade80' : '#f87171';
     document.getElementById('dash-netacum-sub').textContent = netAcum >= 0 ? '▲ positivo' : '▼ negativo';
     } catch(err) { console.error('atualizarDash erro:', err); }
@@ -2270,7 +2510,7 @@
       cont.innerHTML = '<div style="color:#aaa;text-align:center;padding:16px">Selecione agência e data</div>';
       return;
     }
-    const store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    const store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     const rows  = store.filter(r => r.agency === agency && r.date === date);
 
     if (!rows.length) {
@@ -2330,7 +2570,7 @@
   }
 
   function salvarEdicaoDia(i, agency, date) {
-    let store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     const idx = store.findIndex(r => r.agency === agency && r.date === date);
     if (idx === -1) { showToast('❌ Registro não encontrado.', true); return; }
     const desc = parseFloat(document.getElementById('gd-desc-'+i).value)||0;
@@ -2341,7 +2581,7 @@
     const net  = vop + liq;
     store[idx] = { ...store[idx], prodDesconto: desc, antDemais: ant, longoPrazo: lp,
       liquidacaoTotal: liq, vopDia: vop, netDia: net };
-    lsSetItem(STORE_KEY, JSON.stringify(store));
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
     showToast('✅ Lançamento atualizado!');
     carregarProdDia();
     // Recarrega cima se for a mesma agência
@@ -2352,9 +2592,9 @@
 
   function excluirProdDia(agency, date, gerente) {
     if (!confirm('Excluir o lançamento de ' + gerente + ' em ' + date + '?')) return;
-    let store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     store = store.filter(r => !(r.agency === agency && r.date === date && (r.gerente||agency) === gerente));
-    lsSetItem(STORE_KEY, JSON.stringify(store));
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
     showToast('🗑 Lançamento excluído.');
     carregarProdDia();
     if (document.getElementById('agency-select').value === agency) {
@@ -2387,49 +2627,23 @@
   function showTab(tab) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    const tabs = document.querySelectorAll('.tab');
+    const tabs  = document.querySelectorAll('.tab');
     if (tab === 'lancamento') {
       tabs[0].classList.add('active');
       document.getElementById('page-lancamento').classList.add('active');
-      recarregarBanco().then(() => {
-        if (document.getElementById('agency-select').value) syncNomes();
-      });
     } else if (tab === 'gg') {
       tabs[1].classList.add('active');
       document.getElementById('page-gg').classList.add('active');
+      // Não pré-preenche prod-mes — usuário seleciona
       if (!document.getElementById('prod-data').value)
         document.getElementById('prod-data').value = today;
       const _dm = document.getElementById('diario-mes');
       if (_dm && !_dm.value) _dm.value = today.slice(0,7);
-      recarregarBanco().then(() => {
-        renderMiniDashNetProj();
-        renderDiario();
-      });
-    } else if (tab === 'trimestre') {
-      tabs[3].classList.add('active');
-      document.getElementById('page-trimestre').classList.add('active');
-      popularSelectTrimestre();
+      renderMiniDashNetProj();
     } else {
       tabs[2].classList.add('active');
       document.getElementById('page-painel').classList.add('active');
-      recarregarBanco().then(() => carregarPainel());
-    }
-  }
-
-  // Recarrega todos os dados do Supabase sem mostrar o overlay
-  async function recarregarBanco() {
-    try {
-      const res = await fetch(
-        `${SUPA_URL}/rest/v1/app_storage?select=chave,valor`,
-        { headers: supaHeaders() }
-      );
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const rows = await res.json();
-      rows.forEach(r => { _memStore[r.chave] = r.valor; });
-      setDbStatus('online', '🟢 Online');
-    } catch(e) {
-      setDbStatus('offline', '🔴 Offline');
-      console.error('recarregarBanco:', e);
+      carregarPainel();
     }
   }
 
@@ -2473,15 +2687,26 @@
 
   function calcTudo() {
     try {
-    // Diário
+    // Diário — soma o que foi digitado + prod dos gerentes no PROD_KEY para o mesmo dia/agência
     const desc     = g('d-desc');
     const ant      = g('d-ant');
     const lp       = g('d-lp');
     const liq      = g('d-liq');
-    // VOP Dia = Desc + Ant/Demais + Longo Prazo
-    const vopDia  = desc + ant + lp;
-    // Net Dia = VOP Dia − Liquidação
-    const netDia  = vopDia + liq;  // liq negativa, já vem com sinal
+
+    // Soma prod dos gerentes (PROD_KEY) do mesmo dia/agência
+    const _agLanc  = (document.getElementById('agency-select')||{value:''}).value;
+    const _datLanc = (document.getElementById('ref-date')||{value:''}).value;
+    const _prodGer = JSON.parse(localStorage.getItem('lancamentos_prod_gerente')||'[]')
+      .filter(function(r){ return r.agency===_agLanc && r.date===_datLanc; });
+    const _gerDesc = _prodGer.reduce(function(s,r){ return s+(Number(r.prodDesconto)||0); }, 0);
+    const _gerAnt  = _prodGer.reduce(function(s,r){ return s+(Number(r.antDemais)||0); }, 0);
+    const _gerLp   = _prodGer.reduce(function(s,r){ return s+(Number(r.longoPrazo)||0); }, 0);
+    const _gerLiq  = _prodGer.reduce(function(s,r){ return s+(Number(r.liquidacaoTotal)||0); }, 0);
+
+    // VOP Dia = campos manuais + prod gerentes
+    const vopDia  = desc + ant + lp + _gerDesc + _gerAnt + _gerLp;
+    // Net Dia = VOP Dia + Liquidação (inclui liq dos gerentes)
+    const netDia  = vopDia + liq + _gerLiq;
 
     setCell('td-vopDia', vopDia, 'auto-val');
     setCell('td-netDia', netDia, 'net-dia');
@@ -2556,8 +2781,23 @@
 
     const desc     = g('d-desc'), ant = g('d-ant');
     const lp       = g('d-lp'),   liq    = g('d-liq');
-    const vopDia   = desc + ant + lp;
-    const netDia   = vopDia + liq;
+
+    // Soma prod dos gerentes do mesmo dia/agência
+    const _pgRows  = JSON.parse(localStorage.getItem('lancamentos_prod_gerente')||'[]')
+      .filter(r => r.agency===agency && r.date===date);
+    const _pgDesc  = _pgRows.reduce((s,r)=>s+(Number(r.prodDesconto)||0),0);
+    const _pgAnt   = _pgRows.reduce((s,r)=>s+(Number(r.antDemais)||0),0);
+    const _pgLp    = _pgRows.reduce((s,r)=>s+(Number(r.longoPrazo)||0),0);
+    const _pgLiq   = _pgRows.reduce((s,r)=>s+(Number(r.liquidacaoTotal)||0),0);
+
+    // Totais = manual + gerentes
+    const descTotal = desc + _pgDesc;
+    const antTotal  = ant  + _pgAnt;
+    const lpTotal   = lp   + _pgLp;
+    const liqTotal  = liq  + _pgLiq;
+
+    const vopDia   = descTotal + antTotal + lpTotal;
+    const netDia   = vopDia + liqTotal;
     const payload = {
       agency, date,
       // Mensal
@@ -2567,13 +2807,23 @@
       arvInicial:  g('m-arvIni'),
       liqInicial:  g('m-liqIni'),
       // Mensal extra
-      netDiaAnterior: parseFloat((document.getElementById('m-netDiaAnt')||{}).value)||0,
+      netDiaAnterior: parseFloat(document.getElementById('m-netDiaAnt').value)||0,
       gerente: agency,
-      // Diário
-      prodDesconto: desc, antDemais: ant,
-      longoPrazo: lp, liquidacaoTotal: liq,
+      // Diário (inclui soma dos gerentes)
+      prodDesconto: descTotal, antDemais: antTotal,
+      longoPrazo: lpTotal, liquidacaoTotal: liqTotal,
       // Calculados
-      vopDia, netDia
+      vopDia, netDia,
+      netProjMes: (function(){
+        // Pega o valor exato do campo Net Proj. Mês da tela
+        if (window._lastNetProjMes) return window._lastNetProjMes;
+        const el = document.getElementById('td-netProj');
+        if (!el) return 0;
+        const txt = el.textContent || el.innerText || '0';
+        // Remove R$, pontos de milhar, substitui vírgula por ponto
+        const num = txt.replace(/[^0-9,.\-]/g,'').replace(/\./g,'').replace(',','.');
+        return parseFloat(num) || 0;
+      })()
     };
 
     // Salva sempre localmente
@@ -2622,21 +2872,21 @@
   // ── Armazenamento local de lançamentos ────────────────────
   // Salva saldos mensais da agência (atualiza após cada envio)
   function salvarSaldosMensais(agency, saldos) {
-    let store = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
+    let store = JSON.parse(localStorage.getItem(SALDOS_KEY) || '{}');
     store[agency] = saldos;
-    lsSetItem(SALDOS_KEY, JSON.stringify(store));
+    localStorage.setItem(SALDOS_KEY, JSON.stringify(store));
   }
 
   // Carrega saldos mensais salvos para pré-preencher campos de cima
   function carregarSaldosMensais(agency) {
-    const store = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
+    const store = JSON.parse(localStorage.getItem(SALDOS_KEY) || '{}');
     return store[agency] || null;
   }
 
   // Calcula consolidado acumulado do mês para a agência
-  function calcAcumuladoMes(agency) {
-    const mes   = new Date().toISOString().slice(0, 7);
-    const store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+  function calcAcumuladoMes(agency, mesParam) {
+    const mes   = mesParam || new Date().toISOString().slice(0, 7);
+    const store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     const rows  = store.filter(r => r.agency === agency && r.date && r.date.startsWith(mes));
     if (!rows.length) return null;
 
@@ -2680,27 +2930,53 @@
     const s = carregarSaldosMensais(agency);
     if (!s) return;
 
-    // Preenche APENAS campos vazios — nunca apaga o que foi digitado
+    // Preenche campos iniciais (apenas se vazios)
     setSeVazio('m-metaVop',   s.metaVopInicial);
     setSeVazio('m-quenteIni', s.quenteInicial);
     setSeVazio('m-descIni',   s.descInicial);
     setSeVazio('m-arvIni',    s.arvInicial);
     setSeVazio('m-liqIni',    s.liqInicial);
-    setSeVazio('m-netDiaAnt', s.netAcumulado);
+
+    // Net Atual = soma acumulada dos Net Dia de todos os gerentes no mês
+    // Acumula dia a dia: cada dia o net pode melhorar ou piorar
+    const mes      = new Date().toISOString().slice(0,7);
+    const prodStore = JSON.parse(localStorage.getItem(PROD_KEY)  || '[]');
+    const diarStore = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+
+    // Agrupa por data — pega o net de cada dia (soma gerentes do mesmo dia)
+    const porDia = {};
+    prodStore.filter(r => r.agency===agency && r.date && r.date.startsWith(mes))
+      .forEach(r => {
+        if (!porDia[r.date]) porDia[r.date] = 0;
+        const vop = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+        porDia[r.date] += vop + (Number(r.liquidacaoTotal)||0);
+      });
+    diarStore.filter(r => r.agency===agency && r.date && r.date.startsWith(mes))
+      .forEach(r => {
+        if (!porDia[r.date]) porDia[r.date] = 0;
+        porDia[r.date] += Number(r.netDia)||0;
+      });
+
+    // Net Atual = soma de todos os Net Dia do mês
+    const netAcumMes = Object.values(porDia).reduce((s,v) => s+v, 0);
+
+    // Atualiza campo m-netDiaAnt com o acumulado real
+    const netEl = document.getElementById('m-netDiaAnt');
+    if (netEl) netEl.value = netAcumMes || (s.netAcumulado || 0);
 
     calcTudo();
   }
 
   function salvarLocal(payload) {
-    let store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     // Remove lançamento anterior da mesma agência na mesma data
     store = store.filter(r => !(r.agency === payload.agency && r.date === payload.date));
     store.push(payload);
-    lsSetItem(STORE_KEY, JSON.stringify(store));
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
   }
 
   function carregarLocal(date) {
-    const store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    const store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     return store.filter(r => r.date === date);
   }
 
@@ -2710,34 +2986,13 @@
   ];
 
   function montarPainelLocal(date) {
-    // Lê STORE_KEY (lançamentos diários) e PROD_KEY (produtividade por gerente)
-    const storeRows = (JSON.parse(lsGetItem(STORE_KEY) || '[]')).filter(r => r.date === date);
-    const prodRows  = (JSON.parse(lsGetItem(PROD_KEY)  || '[]')).filter(r => r.date === date);
+    // Lê APENAS STORE_KEY (lançamentos da aba Lançar Produção) — 1 lançamento por agência
+    const storeRows = (JSON.parse(localStorage.getItem(STORE_KEY) || '[]')).filter(r => r.date === date);
 
-    // Agrupa por agência — soma todos os gerentes da mesma agência
+    // Um registro por agência (último enviado)
     const byAgency = {};
-
     storeRows.forEach(r => {
-      if (!byAgency[r.agency]) byAgency[r.agency] = { ...r, prodDesconto:0, antDemais:0, longoPrazo:0, liquidacaoTotal:0, vopDia:0, netDia:0 };
-      byAgency[r.agency].prodDesconto    += Number(r.prodDesconto)||0;
-      byAgency[r.agency].antDemais       += Number(r.antDemais)||0;
-      byAgency[r.agency].longoPrazo      += Number(r.longoPrazo)||0;
-      byAgency[r.agency].liquidacaoTotal += Number(r.liquidacaoTotal)||0;
-      byAgency[r.agency].vopDia          += Number(r.vopDia)||(Number(r.prodDesconto||0)+Number(r.antDemais||0)+Number(r.longoPrazo||0));
-      byAgency[r.agency].netDia          += Number(r.netDia)||0;
-    });
-
-    // Também soma lançamentos da aba Produtividade por gerente
-    prodRows.forEach(r => {
-      if (!byAgency[r.agency]) byAgency[r.agency] = { agency: r.agency, prodDesconto:0, antDemais:0, longoPrazo:0, liquidacaoTotal:0, vopDia:0, netDia:0, metaVop:0, descInicial:0, quenteInicial:0, arvInicial:0, liqInicial:0, netDiaAnterior:0, netAcumulado:0 };
-      const pipe = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
-      const pipe2= Number(r.pipe)||pipe;
-      byAgency[r.agency].prodDesconto    += Number(r.prodDesconto)||0;
-      byAgency[r.agency].antDemais       += Number(r.antDemais)||0;
-      byAgency[r.agency].longoPrazo      += Number(r.longoPrazo)||0;
-      byAgency[r.agency].liquidacaoTotal += Number(r.liquidacaoTotal)||0;
-      byAgency[r.agency].vopDia          += pipe2;
-      byAgency[r.agency].netDia          += pipe2 + (Number(r.liquidacaoTotal)||0);
+      byAgency[r.agency] = r; // sobrescreve — pega o mais recente
     });
 
     const zero = {
@@ -2746,41 +3001,11 @@
       netDiaAnterior:0, vopDia:0, netDia:0, netAcumulado:0
     };
 
-    // Carrega saldos mensais de cada agência para preencher o quadro mensal
-    const saldosStore = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
-
     const agencias = AGENCIAS_LIST.map(ag => {
-      const saldos = saldosStore[ag] || {};
       if (byAgency[ag]) {
         const r = byAgency[ag];
         const netDiaAnt = Number(r.netDiaAnterior) || 0;
-        return {
-          ...zero,
-          // Saldos mensais do banco
-          metaVop:       Number(saldos.metaVopInicial) || Number(r.metaVop)      || 0,
-          descInicial:   Number(saldos.descInicial)    || Number(r.descInicial)   || 0,
-          quenteInicial: Number(saldos.quenteInicial)  || Number(r.quenteInicial) || 0,
-          arvInicial:    Number(saldos.arvInicial)      || Number(r.arvInicial)    || 0,
-          liqInicial:    Number(saldos.liqInicial)      || Number(r.liqInicial)    || 0,
-          // Dados do lançamento diário
-          ...r,
-          agency: ag,
-          netAcumulado: netDiaAnt + (Number(r.netDia)||0),
-          enviado: true
-        };
-      }
-      // Agência não enviou hoje, mas mostra saldos mensais se existirem
-      if (Object.keys(saldos).length > 0) {
-        return {
-          ...zero,
-          agency: ag,
-          metaVop:       Number(saldos.metaVopInicial) || 0,
-          descInicial:   Number(saldos.descInicial)    || 0,
-          quenteInicial: Number(saldos.quenteInicial)  || 0,
-          arvInicial:    Number(saldos.arvInicial)      || 0,
-          liqInicial:    Number(saldos.liqInicial)      || 0,
-          enviado: false
-        };
+        return { ...r, agency: ag, netAcumulado: netDiaAnt + (Number(r.netDia)||0), enviado: true };
       }
       return { ...zero, agency: ag, enviado: false };
     });
@@ -2825,32 +3050,309 @@
         .catch(() => {
           // Fallback para localStorage
           renderPainel(montarPainelLocal(date));
-          document.getElementById('last-update').textContent = 'Banco de dados — ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+          document.getElementById('last-update').textContent = 'Dados locais — ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
         });
     } else {
       // Usa localStorage diretamente
       renderPainel(montarPainelLocal(date));
-            document.getElementById('last-update').textContent = 'Banco de dados — ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+            document.getElementById('last-update').textContent = 'Dados locais — ' + new Date().toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
     }
   }
 
-  function calcNetProjAg(agency) {
-    const mes  = document.getElementById('painel-date').value.slice(0,7);
-    const acum = calcAcumuladoMes(agency, mes);
-    if (!acum) return 0;
-    const netAcum = acum.saldoLiq + acum.somaNetDia;
-    return netAcum + acum.saldoDesc + acum.saldoArv + acum.quenteIni;
-  }
-
-    function calcSaldos(a) {
+  function calcSaldos(a) {
     const realVop     = a.prodDesconto + a.antDemais + a.longoPrazo;
     const saldoDesc   = a.descInicial   - a.prodDesconto;
-    const saldoQuente = a.quenteInicial;  // fixo — quente não vem do diário
+    const saldoQuente = a.quenteInicial;
     const saldoArv    = a.arvInicial    - a.antDemais;
-    const saldoLiq    = a.liqInicial    - a.liquidacaoTotal;
-    // Net Projetado = VOP (prod positiva) − Liquidação (negativa)
-    const netProj     = realVop + a.liquidacaoTotal;  // liq negativa
-    return { realVop, saldoDesc, saldoQuente, saldoArv, saldoLiq, netProj };
+    const saldoLiq    = a.liqInicial    - a.liquidacaoTotal; // liqIni − soma liq acumulada
+
+    // Net Acumulado = Saldo Liq + Net Dia (atual)
+    const netAtual    = Number(a.netDiaAnterior) || 0;
+    const netAcum     = saldoLiq + netAtual;
+
+    // Net Projetado = Net Acumulado + Saldo Desc + Saldo ARV + Quente
+    const netProj     = netAcum + saldoDesc + saldoArv + saldoQuente;
+
+    return { realVop, saldoDesc, saldoQuente, saldoArv, saldoLiq, netAcum, netProj };
+  }
+
+  // ── Quartis Regionais ───────────────────────────────────
+  const CORTES_GER_REG = [25000000, 19000000, 13000000];
+  const CORTES_AG_REG  = [50000000, 39000000, 24000000];
+
+  function quartilGer(vop) {
+    const v = Math.abs(Number(vop)||0);
+    if (v > 25082) return 1;
+    if (v > 18809) return 2;
+    if (v > 12748) return 3;
+    return 4;
+  }
+
+  function renderRankingGerentes() {
+    const date = (document.getElementById('painel-date')||{value:''}).value;
+    const mes  = date ? date.slice(0,7) : new Date().toISOString().slice(0,7);
+    const prodStore = JSON.parse(localStorage.getItem(PROD_KEY)  || '[]');
+    const diarStore = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+
+    // Agrupa por gerente — acumula VOP e Net do mês
+    const byGer = {};
+    const seen  = {};
+
+    function addG(agency, ger, vop, net, d) {
+      const dk = d+'||'+agency+'||'+ger;
+      if (seen[dk]) return; seen[dk] = true;
+      if (!byGer[ger]) byGer[ger] = { nome:ger, agency, vop:0, net:0 };
+      byGer[ger].vop += vop;
+      byGer[ger].net += net;
+    }
+
+    prodStore.filter(r => r.date && r.date.startsWith(mes)).forEach(r => {
+      const vop = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+      addG(r.agency, r.gerente||r.agency, vop, vop+(Number(r.liquidacaoTotal)||0), r.date);
+    });
+    diarStore.filter(r => r.date && r.date.startsWith(mes) && r.gerente && r.gerente!==r.agency).forEach(r => {
+      const vop = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+      addG(r.agency, r.gerente, vop, Number(r.netDia)||vop, r.date);
+    });
+
+    const gerList = Object.values(byGer).sort((a,b) => b.vop - a.vop);
+    if (!gerList.length) {
+      ['rank-top-vop','rank-bot-vop'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '<div style="color:#aaa;font-size:11px;padding:8px;text-align:center">Sem dados</div>';
+      });
+      return;
+    }
+
+    function qFlag(v) {
+      const bg = v>25000000?'#1a3a6e':v>19000000?'#0d7a5f':v>13000000?'#e67e22':'#b92d2d';
+      const lbl = v>25000000?'Q1':v>19000000?'Q2':v>13000000?'Q3':'Q4';
+      return `<span style="background:${bg};color:#fff;font-size:9px;padding:1px 6px;border-radius:10px;margin-left:4px">${lbl}</span>`;
+    }
+
+    function renderList(el, list) {
+      if (!el) return;
+      el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:11px">
+        <thead><tr style="background:#f5f7fb">
+          <th style="padding:5px 8px;text-align:left">Gerente</th>
+          <th style="padding:5px 8px;text-align:right">VOP</th>
+          <th style="padding:5px 8px;text-align:right">Net</th>
+        </tr></thead>
+        <tbody>
+          ${list.map((g,i) => {
+            const nc = g.net >= 0 ? '#0d7a5f' : '#b92d2d';
+            return `<tr style="border-top:1px solid #f0f2f7">
+              <td style="padding:5px 8px;font-weight:600">${i+1}. ${g.nome}${qFlag(g.vop)}<br>
+                <small style="color:#aaa;font-weight:400">${g.agency}</small></td>
+              <td style="padding:5px 8px;text-align:right;font-weight:700;color:#1a3a6e">${fmtBRL(g.vop)}</td>
+              <td style="padding:5px 8px;text-align:right;font-weight:700;color:${nc}">${fmtBRL(g.net)}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+    }
+
+    renderList(document.getElementById('rank-top-vop'), gerList.slice(0,5));
+    renderList(document.getElementById('rank-bot-vop'), [...gerList].reverse().slice(0,5));
+  }
+
+  function renderQuartisRegional(agencias) {
+    const date = document.getElementById('painel-date').value;
+    const mes  = date ? date.slice(0,7) : new Date().toISOString().slice(0,7);
+
+    // ── Quartil Gerentes — usa EXATAMENTE a mesma lógica do detalhamento mensal ──
+    const prodStore    = JSON.parse(localStorage.getItem(PROD_KEY)  || '[]');
+    const diarStore    = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+    const prodMes      = prodStore.filter(r => r.date && r.date.startsWith(mes));
+    const diarMes      = diarStore.filter(r => r.date && r.date.startsWith(mes));
+
+    const calcPipeQ    = r => (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+
+    const byGer        = {};
+    const seenQ        = {};
+    const seenGerDateQ = {};
+
+    const addGer = (agency, ger, pipe, date, fonte) => {
+      const dk = fonte + '||' + date + '||' + agency + '||' + ger;
+      if (seenQ[dk]) return;
+      seenQ[dk] = true;
+      // Acumula VOP por gerente (soma todos os dias do mês)
+      if (!byGer[ger]) byGer[ger] = { nome: ger, vop: 0 };
+      byGer[ger].vop += Number(pipe)||0;
+    };
+
+    // PROD_KEY — prioridade
+    prodMes.forEach(r => {
+      const ger  = r.gerente || r.agency;
+      const pipe = calcPipeQ(r) || Number(r.pipe)||0;
+      addGer(r.agency, ger, pipe, r.date, 'prod');
+      seenGerDateQ[r.date + '||' + r.agency + '||' + ger] = true;
+    });
+
+    // STORE_KEY — só se não há no PROD_KEY para mesmo dia
+    diarMes.forEach(r => {
+      const ger = r.gerente;
+      if (!ger || ger === r.agency) return;
+      if (seenGerDateQ[r.date + '||' + r.agency + '||' + ger]) return;
+      addGer(r.agency, ger, calcPipeQ(r), r.date, 'diar');
+    });
+
+    const gerVops = Object.values(byGer);
+    // Debug: mostrar valores calculados
+    _renderQuartilRegional('quartil-ger-bars', 'quartil-ger-table', gerVops, CORTES_GER_REG, 'gerente');
+
+    // ── Quartil Agências — VOP acumulado do mês por agência ──
+    const byAg = {};
+    const seenAg = {};
+    [...prodMes, ...diarMes].forEach(r => {
+      const dk = r.date + '||' + r.agency;
+      if (seenAg[dk]) return;
+      seenAg[dk] = true;
+      if (!byAg[r.agency]) byAg[r.agency] = { nome: r.agency, vop: 0 };
+      byAg[r.agency].vop += calcPipeQ(r) || Number(r.pipe)||0;
+    });
+    const agVops = Object.values(byAg);
+    _renderQuartilRegional('quartil-ag-bars', 'quartil-ag-table', agVops, CORTES_AG_REG, 'agência');
+  }
+
+  function _renderQuartilRegional(barsId, tableId, items, cortes, tipo) {
+    const barsEl  = document.getElementById(barsId);
+    const tableEl = document.getElementById(tableId);
+    if (!barsEl || !tableEl) return;
+
+    const counts = [0,0,0,0];
+    const nomes  = [[],[],[],[]];
+    items.forEach(i => {
+      const v = Math.abs(Number(i.vop)||0);
+      const q = v > cortes[0] ? 0 : v > cortes[1] ? 1 : v > cortes[2] ? 2 : 3;
+      counts[q]++;
+      nomes[q].push(i.nome + ': ' + fmtBRL(v));
+    });
+    const maxC = Math.max(...counts, 1);
+
+    barsEl.innerHTML = counts.map((cnt,i) => {
+      const h = Math.max(Math.round((cnt/maxC)*80), cnt>0?14:3);
+      const cls = ['q1','q2','q3','q4'][i];
+      return `<div class="q-bar-wrap">
+        <div class="q-bar ${cls}" style="height:${h}px">${cnt>0?`<span>${cnt}</span>`:''}</div>
+        <div class="q-bar-lbl">Q${i+1}</div>
+      </div>`;
+    }).join('');
+
+    const fmtV = v => {
+      const n = Math.abs(v);
+      return n>=1e6?'R$'+(n/1e6).toFixed(1)+'M':n>=1e3?'R$'+(n/1e3).toFixed(0)+'k':'R$'+n.toFixed(0);
+    };
+    // Lista detalhada por quartil
+    const listaQ = nomes || [[],[],[],[]];
+    tableEl.innerHTML = `<table class="q-corte-table">
+      <thead><tr>
+        <th style="color:#1a3a6e">Q1 &gt;${fmtV(cortes[0])}</th>
+        <th style="color:#0d7a5f">Q2 &gt;${fmtV(cortes[1])}</th>
+        <th style="color:#e67e22">Q3 &gt;${fmtV(cortes[2])}</th>
+        <th style="color:#b92d2d">Q4 ≤${fmtV(cortes[2])}</th>
+      </tr></thead>
+      <tbody><tr>
+        <td style="color:#1a3a6e;font-size:10px">${counts[0]} ${tipo}${counts[0]!==1?'s':''}<br>${listaQ[0].join('<br>') || '—'}</td>
+        <td style="color:#0d7a5f;font-size:10px">${counts[1]} ${tipo}${counts[1]!==1?'s':''}<br>${listaQ[1].join('<br>') || '—'}</td>
+        <td style="color:#e67e22;font-size:10px">${counts[2]} ${tipo}${counts[2]!==1?'s':''}<br>${listaQ[2].join('<br>') || '—'}</td>
+        <td style="color:#b92d2d;font-size:10px">${counts[3]} ${tipo}${counts[3]!==1?'s':''}<br>${listaQ[3].join('<br>') || '—'}</td>
+      </tr></tbody>
+    </table>`;
+  }
+
+  // Cortes de quartil para agências (VOP Ativos da foto)
+  const CORTES_AG = [50759, 39306, 23875];
+
+  function quartilAg(vop) {
+    const v = Math.abs(Number(vop)||0);
+    if (v > 50759) return 1;
+    if (v > 39306) return 2;
+    if (v > 23875) return 3;
+    return 4;
+  }
+
+  function renderAgCards(agencias) {
+    const grid = document.getElementById('ag-cards-grid');
+    if (!grid) return;
+    const circ = 2 * Math.PI * 13;
+
+    grid.innerHTML = agencias.map(a => {
+      const metaVop = Number(a.metaVop) || 0;
+      const realVop = (Number(a.prodDesconto)||0) + (Number(a.antDemais)||0) + (Number(a.longoPrazo)||0);
+      const pct     = metaVop > 0 ? Math.min((realVop / metaVop) * 100, 100) : 0;
+      const offset  = circ - (pct / 100) * circ;
+      const color   = pct >= 100 ? '#0d7a5f' : pct >= 70 ? '#e67e22' : '#b92d2d';
+      const q       = quartilAg(realVop);
+      const qLbl    = ['','Q1','Q2','Q3','Q4'][q];
+      const qCls    = ['','q1-ag','q2-ag','q3-ag','q4-ag'][q];
+      const qBadge  = ['','ag-q1','ag-q2','ag-q3','ag-q4'][q];
+      const cardCls = ['','q1-ag','q2-ag','q3-ag','q4-ag'][q];
+
+      // Relógio 2: projeção (onde deveria estar hoje)
+      const now       = new Date();
+      const diaHoje   = now.getDate();
+      const diasMes   = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+      const metaHoje  = metaVop > 0 ? (diaHoje / diasMes) * metaVop : 0;
+      const pctProj   = metaHoje > 0 ? Math.min((realVop / metaHoje) * 100, 150) : 0;
+      const offProj   = circ - (Math.min(pctProj,100) / 100) * circ;
+      const corProj   = pctProj >= 100 ? '#4ade80' : pctProj >= 80 ? '#facc15' : '#f87171';
+
+      if (!a.enviado) return `<div class="ag-card ag-pendente">
+        <div class="ag-nome">${a.agency}</div>
+        <div class="ag-clock-wrap">
+          <svg viewBox="0 0 32 32"><circle class="ag-clock-bg" cx="16" cy="16" r="13"/></svg>
+          <div class="ag-clock-text"><span class="ag-clock-pct" style="color:#aaa">—</span><span class="ag-clock-lbl">VOP</span></div>
+        </div>
+        <div class="ag-meta-val" style="color:#aaa">Pendente</div>
+      </div>`;
+
+      return `<div class="ag-card ${cardCls}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div class="ag-nome" style="font-size:10px">${a.agency}</div>
+          <span class="ag-badge ${qBadge}" style="font-size:9px">${qLbl}</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <!-- Relógio VOP realizado -->
+          <div style="flex:0 0 auto;text-align:center">
+            <div style="position:relative;width:44px;height:44px">
+              <svg width="44" height="44" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
+                <circle cx="22" cy="22" r="17" fill="none" stroke="#f0f2f7" stroke-width="5"/>
+                <circle cx="22" cy="22" r="17" fill="none" stroke="${color}" stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-dasharray="${circ} ${circ}"
+                  stroke-dashoffset="${offset}"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+                <span style="font-size:9px;font-weight:700;color:${color}">${Math.round(pct)}%</span>
+              </div>
+            </div>
+            <div style="font-size:8px;color:#aaa;margin-top:1px">Realizado</div>
+          </div>
+          <!-- Relógio projeção -->
+          <div style="flex:0 0 auto;text-align:center">
+            <div style="position:relative;width:44px;height:44px">
+              <svg width="44" height="44" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
+                <circle cx="22" cy="22" r="17" fill="none" stroke="#f0f2f7" stroke-width="5"/>
+                <circle cx="22" cy="22" r="17" fill="none" stroke="${corProj}" stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-dasharray="${circ} ${circ}"
+                  stroke-dashoffset="${offProj}"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+                <span style="font-size:9px;font-weight:700;color:${corProj}">${Math.round(pctProj)}%</span>
+              </div>
+            </div>
+            <div style="font-size:8px;color:#aaa;margin-top:1px">Dia ${diaHoje}</div>
+          </div>
+          <!-- Valores -->
+          <div style="flex:1;min-width:0">
+            <div style="font-size:11px;font-weight:700;color:${color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${fmtBRL(realVop)}</div>
+            <div style="font-size:9px;color:#aaa">meta: ${fmtBRL(metaVop)}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
   }
 
   function renderPainel(data) {
@@ -2869,27 +3371,24 @@
     // ── Mensal ──
     const tbM  = document.getElementById('tbody-mensal');
     const rowsM = agencias.map(a => {
-      const s      = calcSaldos(a);
-      const badge  = a.enviado ? '<span class="badge ok">✅</span>' : '<span class="badge pending">⏳</span>';
-      const temSaldo = a.metaVop || a.descInicial || a.quenteInicial || a.arvInicial || a.liqInicial;
-      // Mostra saldos mensais se a agência enviou OU se tem saldos cadastrados no banco
-      const mostraMensal = a.enviado || temSaldo;
-      const dim    = a.enviado ? '' : 'style="opacity:0.7"';
+      const s     = calcSaldos(a);
+      const badge = a.enviado ? '<span class="badge ok">✅</span>' : '<span class="badge pending">⏳</span>';
+      const dim   = a.enviado ? '' : 'style="color:#bbb"';
       return `<tr ${dim}>
-        <td class="ag" ${a.enviado?'':'style="background:#fafafa"'}>${a.agency}</td>
-        <td>${mostraMensal ? fmtBRL(a.metaVop)         : dash}</td>
-        <td class="${a.enviado?'auto-val':''}">${a.enviado ? fmtBRL(s.realVop) : dash}</td>
-        <td>${mostraMensal ? fmtBRL(a.descInicial)     : dash}</td>
-        <td class="${mostraMensal?'saldo '+cls(s.saldoDesc):''}">${mostraMensal ? fmtBRL(s.saldoDesc)    : dash}</td>
-        <td>${mostraMensal ? fmtBRL(a.quenteInicial)   : dash}</td>
-        <td class="${mostraMensal?'saldo '+cls(s.saldoQuente):''}">${mostraMensal ? fmtBRL(s.saldoQuente) : dash}</td>
-        <td>${mostraMensal ? fmtBRL(a.arvInicial)      : dash}</td>
-        <td class="${mostraMensal?'saldo '+cls(s.saldoArv):''}">${mostraMensal ? fmtBRL(s.saldoArv)     : dash}</td>
-        <td>${mostraMensal ? fmtBRL(a.liqInicial)      : dash}</td>
-        <td class="${mostraMensal?'saldo '+cls(s.saldoLiq):''}">${mostraMensal ? fmtBRL(s.saldoLiq)     : dash}</td>
-        <td>${a.enviado ? fmtBRL(a.netDiaAnterior||0)  : dash}</td>
-        <td class="${a.enviado?'net-acum '+cls(a.netAcumulado):''}">${a.enviado ? fmtBRL(a.netAcumulado) : dash}</td>
-        <td class="${mostraMensal?'net-proj '+cls(s.netProj):''}">${mostraMensal ? fmtBRL(s.netProj)    : dash}</td>
+        <td class="ag" ${a.enviado?'':'style="color:#bbb;background:#fafafa"'}>${a.agency}</td>
+        <td>${a.enviado ? fmtBRL(a.metaVop)         : dash}</td>
+        <td class="${a.enviado?'auto-val':''}">${a.enviado ? fmtBRL(s.realVop)      : dash}</td>
+        <td>${a.enviado ? fmtBRL(a.descInicial)     : dash}</td>
+        <td class="${a.enviado?'saldo '+cls(s.saldoDesc):''}">${a.enviado ? fmtBRL(s.saldoDesc)   : dash}</td>
+        <td>${a.enviado ? fmtBRL(a.quenteInicial)   : dash}</td>
+        <td class="${a.enviado?'saldo '+cls(s.saldoQuente):''}">${a.enviado ? fmtBRL(s.saldoQuente): dash}</td>
+        <td>${a.enviado ? fmtBRL(a.arvInicial)      : dash}</td>
+        <td class="${a.enviado?'saldo '+cls(s.saldoArv):''}">${a.enviado ? fmtBRL(s.saldoArv)    : dash}</td>
+        <td>${a.enviado ? fmtBRL(a.liqInicial)      : dash}</td>
+        <td class="${a.enviado?'saldo '+cls(s.saldoLiq):''}">${a.enviado ? fmtBRL(s.saldoLiq)    : dash}</td>
+        <td>${a.enviado ? fmtBRL(a.netDiaAnterior||0) : dash}</td>
+        <td class="${a.enviado?'net-acum '+cls(s.netAcum):''}">${a.enviado ? fmtBRL(s.netAcum) : dash}</td>
+        <td class="${a.enviado?'net-proj '+cls(s.netProj):''}">${a.enviado ? fmtBRL(s.netProj)   : dash}</td>
         <td style="text-align:center">${badge}</td>
       </tr>`;
     });
@@ -2917,10 +3416,20 @@
     tbM.innerHTML = rowsM.join('');
 
     // ── Diário ──
+    // npMes: replica exatamente o netProjMes salvo no STORE_KEY (mesmo valor do Lançar Produção)
+    const _storeAll = JSON.parse(localStorage.getItem(STORE_KEY)||'[]');
+    const _paDate   = document.getElementById('painel-date').value;
+    function npMes(agency) {
+      const r = _storeAll.find(function(x){ return x.agency===agency && x.date===_paDate; });
+      return r ? Number(r.netProjMes)||0 : 0;
+    }
     const tbD  = document.getElementById('tbody-diario');
     const rowsD = agencias.map(a => {
       const badge = a.enviado ? '<span class="badge ok">✅</span>' : '<span class="badge pending">⏳</span>';
       const dim   = a.enviado ? '' : 'style="color:#bbb"';
+      var npv = a.enviado ? npMes(a.agency) : null;
+      var npvCls = npv !== null ? (npv >= 0 ? 'pos' : 'neg') : '';
+      var npvStr = npv !== null ? fmtBRL(npv) : dash;
       return `<tr ${dim}>
         <td class="ag" ${a.enviado?'':'style="color:#bbb;background:#fafafa"'}>${a.agency}</td>
         <td>${a.enviado ? fmtBRL(a.prodDesconto)    : dash}</td>
@@ -2928,10 +3437,23 @@
         <td>${a.enviado ? fmtBRL(a.longoPrazo)      : dash}</td>
         <td>${a.enviado ? fmtBRL(a.liquidacaoTotal) : dash}</td>
         <td class="${a.enviado?'auto-val':''}">${a.enviado ? fmtBRL(a.vopDia) : dash}</td>
-        <td class="${a.enviado?'net-dia '+cls(a.netDia):''}">${a.enviado ? fmtBRL(a.netDia) : dash}</td>
+        <td class="net-dia ${a.enviado ? cls(a.netDia) : ''}">${a.enviado ? fmtBRL(a.netDia) : dash}</td>
+        <td class="${npvCls}" style="text-align:right;font-weight:700">${npvStr}</td>
         <td style="text-align:center">${badge}</td>
       </tr>`;
     });
+
+    // Net Proj Mês regional = soma de todas as agências
+    const _saldosTodos = JSON.parse(localStorage.getItem(SALDOS_KEY)||'{}');
+    const _netProjReg  = agencias.filter(a=>a.enviado).reduce((s,a) => {
+      const _sAg = _saldosTodos[a.agency]||{};
+      const _ac  = calcAcumuladoMes(a.agency);
+      const _sd  = (Number(_sAg.descInicial)||0) - (_ac?_ac.somaDesc:0);
+      const _sa  = (Number(_sAg.arvInicial)||0)  - (_ac?_ac.somaAnt:0);
+      const _sq  = Number(_sAg.quenteInicial)||0;
+      const _na  = _ac?_ac.somaNetDia:0;
+      return s + _na + _sd + _sa + _sq;
+    }, 0);
 
     rowsD.push(`<tr class="reg">
       <td class="ag">REGIONAL</td>
@@ -2940,342 +3462,223 @@
       <td>${fmtBRL(regional.longoPrazo)}</td>
       <td>${fmtBRL(regional.liquidacaoTotal)}</td>
       <td>${fmtBRL(regional.vopDia)}</td>
-      <td class="${cls(regional.netDia)}">${fmtBRL(regional.netDia)}</td>
+      <td class="net-dia ${cls(regional.netDia)}">${fmtBRL(regional.netDia)}</td>
+      <td class="${cls(_netProjReg)}">${fmtBRL(_netProjReg)}</td>
       <td style="text-align:center">${regional.completo
         ? '<span class="badge ok">✅</span>'
         : `<span class="badge pending">${totalEnviadas}/${TOTAL_AGENCIAS}</span>`}</td>
     </tr>`);
     tbD.innerHTML = rowsD.join('');
 
-    // Quartis
+    // Cards, quartis e ranking
+    renderAgCards(agencias);
+    renderQuartisRegional(agencias);
+    renderRankingGerentes();
   }
 
-
-  // ── Editar lançamento de produção por gerente ──
-  let _editIdx = null;
-
-  function abrirEditProd(idx) {
-    const item = window._editItems && window._editItems[idx];
-    if (!item) return;
-    _editIdx = idx;
-    const mes = document.getElementById('prod-mes').value;
-    const [y, m] = mes.split('-');
-    document.getElementById('edit-prod-info').textContent =
-      `📅 ${m}/${y} · 🏦 ${item.empresa} · 👤 ${item.gerente}`;
-
-    // Busca dados em AMBAS as chaves (PROD_KEY e STORE_KEY)
-    const prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
-    const diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-
-    const rowsProd = prodStore.filter(r =>
-      r.agency === item.empresa && r.gerente === item.gerente && r.date && r.date.startsWith(mes)
-    );
-    const rowsDiar = diarStore.filter(r =>
-      r.agency === item.empresa &&
-      (r.gerente === item.gerente || (!r.gerente && r.agency === item.gerente)) &&
-      r.date && r.date.startsWith(mes)
-    );
-
-    // Soma tudo
-    const allRows = [...rowsProd, ...rowsDiar];
-    const totDesc = allRows.reduce((s,r) => s + (Number(r.prodDesconto)||0), 0);
-    const totAnt  = allRows.reduce((s,r) => s + (Number(r.antDemais)||0),    0);
-    const totLp   = allRows.reduce((s,r) => s + (Number(r.longoPrazo)||0),   0);
-    const totLiq  = allRows.reduce((s,r) => s + (Number(r.liquidacaoTotal)||0), 0);
-
-    document.getElementById('edit-desc').value = totDesc || '';
-    document.getElementById('edit-ant').value  = totAnt  || '';
-    document.getElementById('edit-lp').value   = totLp   || '';
-    document.getElementById('edit-liq').value  = totLiq  || '';
-    calcEditProd();
-    document.getElementById('edit-prod-modal').style.display = 'flex';
+  function editarHistLinha(btn) {
+    var tr = btn.closest('tr');
+    if (!tr) return;
+    // Trocar spans por inputs na linha
+    tr.querySelectorAll('.hval').forEach(function(s){ s.style.display='none'; });
+    tr.querySelectorAll('.hinput').forEach(function(i){ i.style.display='inline-block'; });
+    btn.style.display = 'none';
+    var saveBtn = tr.querySelector('.hbtn-save');
+    if (saveBtn) saveBtn.style.display = 'inline-block';
+    calcHistRowTr(tr);
   }
 
-  function calcEditProd() {
-    const desc = parseFloat(document.getElementById('edit-desc').value)||0;
-    const ant  = parseFloat(document.getElementById('edit-ant').value) ||0;
-    const lp   = parseFloat(document.getElementById('edit-lp').value)  ||0;
-    const liq  = parseFloat(document.getElementById('edit-liq').value) ||0;
-    const pipe = desc + ant + lp;
-    const net  = pipe + liq;
-    document.getElementById('edit-calc-pipe').textContent = fmtBRL(pipe);
-    document.getElementById('edit-calc-net').textContent  = fmtBRL(net);
-    document.getElementById('edit-calc-net').style.color  = net >= 0 ? '#0d7a5f' : '#b92d2d';
+  function calcHistRowTr(el) { var tr = el.tagName==='TR' ? el : el.closest ? el.closest('tr') : el.parentNode.parentNode;
+    var inps = tr.querySelectorAll('.hinput');
+    var desc = parseFloat(inps[0]&&inps[0].value)||0;
+    var ant  = parseFloat(inps[1]&&inps[1].value)||0;
+    var lp   = parseFloat(inps[2]&&inps[2].value)||0;
+    var liq  = parseFloat(inps[3]&&inps[3].value)||0;
+    var pipe = desc+ant+lp, net = pipe+liq;
+    var pipeEl = tr.querySelector('.hpipe');
+    var netEl  = tr.querySelector('.hnet');
+    if (pipeEl) pipeEl.textContent = fmtBRL(pipe);
+    if (netEl)  { netEl.textContent = fmtBRL(net); netEl.className = 'hnet '+(net>=0?'pos':'neg'); }
   }
 
-  function fecharEditProd() {
-    document.getElementById('edit-prod-modal').style.display = 'none';
-    _editIdx = null;
-  }
+  function salvarHistLinha(btn) {
+    var tr      = btn.closest('tr');
+    var agency  = btn.getAttribute('data-agency');
+    var gerente = btn.getAttribute('data-gerente');
+    var date    = btn.getAttribute('data-date');
+    var inps    = tr.querySelectorAll('.hinput');
+    var desc = parseFloat(inps[0]&&inps[0].value)||0;
+    var ant  = parseFloat(inps[1]&&inps[1].value)||0;
+    var lp   = parseFloat(inps[2]&&inps[2].value)||0;
+    var liq  = parseFloat(inps[3]&&inps[3].value)||0;
+    var pipe = desc+ant+lp, net = pipe+liq;
 
-  function salvarEdicaoProd() {
-    const item = window._editItems && window._editItems[_editIdx];
-    if (!item) return;
-    const mes  = document.getElementById('prod-mes').value;
-    const desc = parseFloat(document.getElementById('edit-desc').value)||0;
-    const ant  = parseFloat(document.getElementById('edit-ant').value) ||0;
-    const lp   = parseFloat(document.getElementById('edit-lp').value)  ||0;
-    const liq  = parseFloat(document.getElementById('edit-liq').value) ||0;
-    const pipe = desc + ant + lp;
-    const net  = pipe + liq;
+    var store = JSON.parse(localStorage.getItem(PROD_KEY)||'[]');
+    var idx = store.findIndex(function(r){ return r.date===date && r.agency===agency && r.gerente===gerente; });
+    if (idx>=0) {
+      store[idx] = Object.assign({}, store[idx], {prodDesconto:desc,antDemais:ant,longoPrazo:lp,liquidacaoTotal:liq,pipe:pipe,netProjetado:net});
+    } else {
+      store.push({agency:agency,gerente:gerente,date:date,prodDesconto:desc,antDemais:ant,longoPrazo:lp,liquidacaoTotal:liq,pipe:pipe,netProjetado:net});
+    }
+    localStorage.setItem(PROD_KEY, JSON.stringify(store));
 
-    // Remove lançamentos antigos de AMBAS as chaves
-    let prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
-    let diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-
-    prodStore = prodStore.filter(r =>
-      !(r.agency === item.empresa && r.gerente === item.gerente && r.date && r.date.startsWith(mes))
-    );
-    diarStore = diarStore.filter(r =>
-      !(r.agency === item.empresa &&
-        (r.gerente === item.gerente || (!r.gerente && r.agency === item.gerente)) &&
-        r.date && r.date.startsWith(mes))
-    );
-
-    // Insere registro consolidado editado no PROD_KEY
-    prodStore.push({
-      agency: item.empresa, gerente: item.gerente,
-      date: mes + '-01',
-      prodDesconto: desc, antDemais: ant, longoPrazo: lp, liquidacaoTotal: liq,
-      pipe, netProjetado: net
+    // Volta visualização
+    tr.querySelectorAll('.hval').forEach(function(s,i){
+      var vals=[fmtBRL(desc),fmtBRL(ant),fmtBRL(lp),fmtBRL(liq)];
+      s.textContent=vals[i]||s.textContent;
+      s.style.display='inline';
     });
+    tr.querySelectorAll('.hinput').forEach(function(i){ i.style.display='none'; });
+    btn.style.display = 'none';
+    var editBtn = tr.querySelector('.hbtn-edit');
+    if (editBtn) editBtn.style.display = 'inline-block';
 
-    lsSetItem(PROD_KEY,  JSON.stringify(prodStore));
-    lsSetItem(STORE_KEY, JSON.stringify(diarStore));
-    showToast('✅ Lançamento de ' + item.gerente + ' atualizado!');
-    fecharEditProd();
+    showToast('✅ '+gerente+' — '+date+' atualizado!');
+    renderGerentesAgencia();
     renderProdutividade();
   }
 
-  // Adiciona listeners de cálculo ao modal de edição
-  ['edit-desc','edit-ant','edit-lp','edit-liq'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('input', calcEditProd);
-  });
-
-
-  // ── Cards de Agência com relógio duplo ──────────────────
-  const CORTES_AG_REG = [50000000, 39000000, 24000000];
-  const CORTES_GER_REG = [25000000, 19000000, 13000000];
-
-  function quartilAg(vop) {
-    const v = Math.abs(Number(vop)||0);
-    if (v > 50759000) return 1;
-    if (v > 39306000) return 2;
-    if (v > 23875000) return 3;
-    return 4;
+  function calcHistRow(hIdx) {
+    // legado — mantido por compatibilidade
   }
 
-  function renderAgCards(agencias) {
-    const grid = document.getElementById('ag-cards-grid');
-    if (!grid) return;
-    const circ = 2 * Math.PI * 17;
-    const now     = new Date();
-    const diaHoje = now.getDate();
-    const diasMes = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-
-    grid.innerHTML = agencias.map(a => {
-      const metaVop = Number(a.metaVop) || 0;
-      const realVop = (Number(a.prodDesconto)||0)+(Number(a.antDemais)||0)+(Number(a.longoPrazo)||0);
-      const pct     = metaVop > 0 ? Math.min((realVop / metaVop) * 100, 100) : 0;
-      const offset  = circ - (pct / 100) * circ;
-      const color   = pct >= 100 ? '#0d7a5f' : pct >= 70 ? '#e67e22' : '#b92d2d';
-      const q       = quartilAg(realVop);
-      const qLbl    = ['','Q1','Q2','Q3','Q4'][q];
-      const qBadge  = ['','ag-q1','ag-q2','ag-q3','ag-q4'][q];
-      const cardCls = ['','q1-ag','q2-ag','q3-ag','q4-ag'][q];
-      const metaHoje  = metaVop > 0 ? (diaHoje / diasMes) * metaVop : 0;
-      const pctProj   = metaHoje > 0 ? Math.min((realVop / metaHoje) * 100, 150) : 0;
-      const offProj   = circ - (Math.min(pctProj,100) / 100) * circ;
-      const corProj   = pctProj >= 100 ? '#4ade80' : pctProj >= 80 ? '#facc15' : '#f87171';
-
-      if (!a.enviado) return `<div class="ag-card ag-pendente">
-        <div class="ag-nome">${a.agency}</div>
-        <div style="font-size:10px;color:#aaa;text-align:center;padding:8px">Pendente</div>
-      </div>`;
-
-      return `<div class="ag-card ${cardCls}">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div class="ag-nome" style="font-size:10px">${a.agency}</div>
-          <span class="ag-badge ${qBadge}" style="font-size:9px">${qLbl}</span>
-        </div>
-        <div style="display:flex;gap:6px;align-items:center">
-          <div style="text-align:center">
-            <div style="position:relative;width:44px;height:44px">
-              <svg width="44" height="44" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
-                <circle cx="22" cy="22" r="17" fill="none" stroke="#f0f2f7" stroke-width="5"/>
-                <circle cx="22" cy="22" r="17" fill="none" stroke="${color}" stroke-width="5"
-                  stroke-linecap="round" stroke-dasharray="${circ} ${circ}" stroke-dashoffset="${offset}"/>
-              </svg>
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-                <span style="font-size:9px;font-weight:700;color:${color}">${Math.round(pct)}%</span>
-              </div>
-            </div>
-            <div style="font-size:8px;color:#aaa;margin-top:1px">Real.</div>
-          </div>
-          <div style="text-align:center">
-            <div style="position:relative;width:44px;height:44px">
-              <svg width="44" height="44" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
-                <circle cx="22" cy="22" r="17" fill="none" stroke="#f0f2f7" stroke-width="5"/>
-                <circle cx="22" cy="22" r="17" fill="none" stroke="${corProj}" stroke-width="5"
-                  stroke-linecap="round" stroke-dasharray="${circ} ${circ}" stroke-dashoffset="${offProj}"/>
-              </svg>
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-                <span style="font-size:9px;font-weight:700;color:${corProj}">${Math.round(pctProj)}%</span>
-              </div>
-            </div>
-            <div style="font-size:8px;color:#aaa;margin-top:1px">Dia ${diaHoje}</div>
-          </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:11px;font-weight:700;color:${color}">${fmtShort(realVop)}</div>
-            <div style="font-size:9px;color:#aaa">meta: ${fmtShort(metaVop)}</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
+  function salvarHistLinhaLegado(hIdx, date, agency, gerente) {
+    // legado — não utilizado
   }
 
-  // ── Quartis Regionais ───────────────────────────────────
-  function renderQuartisRegional(agencias) {
+  function excluirHistLinha(date, agency, gerente) {
+    const modal = document.getElementById('del-modal');
+    const msg   = document.getElementById('del-modal-msg');
+    const btn   = document.getElementById('del-modal-btn');
+    const [y,m,d] = date.split('-');
+    msg.innerHTML = 'Excluir lançamento de <strong>' + gerente + '</strong> em <strong>' + d+'/'+m+'/'+y + '</strong>?';
+    btn.onclick = function() {
+      modal.style.display = 'none';
+      let store = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
+      store = store.filter(r => !(r.date === date && r.agency === agency && r.gerente === gerente));
+      localStorage.setItem(PROD_KEY, JSON.stringify(store));
+      showToast('🗑 Removido!');
+      renderGerentesAgencia();
+      renderProdutividade();
+      atualizarPainelGerentes();
+    };
+    modal.style.display = 'flex';
+  }
+
+  function inspecionarDados() {
     const date = document.getElementById('painel-date').value;
     const mes  = date ? date.slice(0,7) : new Date().toISOString().slice(0,7);
-    const prodStore = JSON.parse(lsGetItem(PROD_KEY)  || '[]');
-    const diarStore = JSON.parse(lsGetItem(STORE_KEY) || '[]');
-    const prodMes   = prodStore.filter(r => r.date && r.date.startsWith(mes));
-    const diarMes   = diarStore.filter(r => r.date && r.date.startsWith(mes));
-    const calcPipeQ = r => (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
-
-    // Quartil Gerentes
-    const byGer = {}; const seenQ = {}; const seenGerDateQ = {};
-    const addGer = (agency, ger, pipe, date, fonte) => {
-      const dk = fonte+'||'+date+'||'+agency+'||'+ger;
-      if (seenQ[dk]) return; seenQ[dk] = true;
-      if (!byGer[ger]) byGer[ger] = { nome: ger, vop: 0 };
-      byGer[ger].vop += Number(pipe)||0;
-    };
-    prodMes.forEach(r => {
-      const ger = r.gerente || r.agency;
-      addGer(r.agency, ger, calcPipeQ(r)||Number(r.pipe)||0, r.date, 'prod');
-      seenGerDateQ[r.date+'||'+r.agency+'||'+ger] = true;
+    const prod = JSON.parse(localStorage.getItem(PROD_KEY) || '[]').filter(r => r.date && r.date.startsWith(mes));
+    const diar = JSON.parse(localStorage.getItem(STORE_KEY) || '[]').filter(r => r.date && r.date.startsWith(mes));
+   
+    let msg = '=== PROD_KEY (aba Produtividade) ===\n';
+    prod.forEach(r => {
+      const pipe = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+      msg += r.gerente + ' | ' + r.agency + ' | ' + r.date + '\n';
+      msg += '  desc=' + r.prodDesconto + ' ant=' + r.antDemais + ' lp=' + r.longoPrazo + '\n';
+      msg += '  pipe calculado=' + pipe + ' | r.pipe=' + r.pipe + '\n\n';
     });
-    diarMes.forEach(r => {
-      const ger = r.gerente;
-      if (!ger || ger === r.agency) return;
-      if (seenGerDateQ[r.date+'||'+r.agency+'||'+ger]) return;
-      addGer(r.agency, ger, calcPipeQ(r), r.date, 'diar');
+    msg += '=== STORE_KEY (aba Lançar Produção) ===\n';
+    diar.forEach(r => {
+      const pipe = (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
+      msg += r.agency + ' | ger=' + (r.gerente||'—') + ' | ' + r.date + '\n';
+      msg += '  desc=' + r.prodDesconto + ' ant=' + r.antDemais + ' lp=' + r.longoPrazo + '\n';
+      msg += '  vopDia=' + r.vopDia + ' | pipe calc=' + pipe + '\n\n';
     });
-    _renderQuartilRegional('quartil-ger-bars','quartil-ger-table', Object.values(byGer), CORTES_GER_REG, 'gerente');
-
-    // Quartil Agências
-    const byAg = {}; const seenAg = {};
-    [...prodMes, ...diarMes].forEach(r => {
-      const dk = r.date+'||'+r.agency;
-      if (seenAg[dk]) return; seenAg[dk] = true;
-      if (!byAg[r.agency]) byAg[r.agency] = { nome: r.agency, vop: 0 };
-      byAg[r.agency].vop += calcPipeQ(r)||Number(r.pipe)||0;
-    });
-    _renderQuartilRegional('quartil-ag-bars','quartil-ag-table', Object.values(byAg), CORTES_AG_REG, 'agência');
+    alert(msg);
   }
 
-  function _renderQuartilRegional(barsId, tableId, items, cortes, tipo) {
-    const barsEl = document.getElementById(barsId);
-    const tableEl = document.getElementById(tableId);
-    if (!barsEl || !tableEl) return;
-    const counts = [0,0,0,0]; const nomes = [[],[],[],[]];
-    items.forEach(i => {
-      const v = Math.abs(Number(i.vop)||0);
-      const q = v > cortes[0] ? 0 : v > cortes[1] ? 1 : v > cortes[2] ? 2 : 3;
-      counts[q]++; nomes[q].push(i.nome + ': ' + fmtShort(v));
-    });
-    const maxC = Math.max(...counts, 1);
-    barsEl.innerHTML = counts.map((cnt,i) => {
-      const h = Math.max(Math.round((cnt/maxC)*80), cnt>0?14:3);
-      const cls = ['q1','q2','q3','q4'][i];
-      return `<div class="q-bar-wrap"><div class="q-bar ${cls}" style="height:${h}px">${cnt>0?`<span>${cnt}</span>`:''}</div><div class="q-bar-lbl">Q${i+1}</div></div>`;
-    }).join('');
-    const fmtV = v => { const n=Math.abs(v); return n>=1e6?'R$'+(n/1e6).toFixed(1)+'M':n>=1e3?'R$'+(n/1e3).toFixed(0)+'k':'R$'+n.toFixed(0); };
-    tableEl.innerHTML = `<table class="q-corte-table"><thead><tr>
-      <th style="color:#1a3a6e">Q1 &gt;${fmtV(cortes[0])}</th>
-      <th style="color:#0d7a5f">Q2 &gt;${fmtV(cortes[1])}</th>
-      <th style="color:#e67e22">Q3 &gt;${fmtV(cortes[2])}</th>
-      <th style="color:#b92d2d">Q4 ≤${fmtV(cortes[2])}</th>
-    </tr></thead><tbody><tr>
-      <td style="color:#1a3a6e;font-size:10px">${counts[0]} ${tipo}${counts[0]!==1?'s':''}<br>${nomes[0].join('<br>')||'—'}</td>
-      <td style="color:#0d7a5f;font-size:10px">${counts[1]} ${tipo}${counts[1]!==1?'s':''}<br>${nomes[1].join('<br>')||'—'}</td>
-      <td style="color:#e67e22;font-size:10px">${counts[2]} ${tipo}${counts[2]!==1?'s':''}<br>${nomes[2].join('<br>')||'—'}</td>
-      <td style="color:#b92d2d;font-size:10px">${counts[3]} ${tipo}${counts[3]!==1?'s':''}<br>${nomes[3].join('<br>')||'—'}</td>
-    </tr></tbody></table>`;
+  function salvarGerenteProd(btn) {
+    var tr  = btn.parentNode.parentNode;
+    var ag  = btn.getAttribute('data-agency')  || document.getElementById('prod-agency').value;
+    var ger = btn.getAttribute('data-gerente');
+    var dt  = btn.getAttribute('data-date')    || document.getElementById('prod-data').value;
+    if (!dt)  { showToast('Selecione a data!', true); return; }
+    if (!ag)  { showToast('Selecione a agência!', true); return; }
+    if (!ger) { showToast('Gerente não encontrado!', true); return; }
+    var inp = tr.getElementsByTagName('input');
+    var nums = [];
+    for (var i = 0; i < inp.length; i++) { if (inp[i].type === 'number') nums.push(inp[i]); }
+    var d = parseFloat(nums[0] ? nums[0].value : 0) || 0;
+    var a = parseFloat(nums[1] ? nums[1].value : 0) || 0;
+    var l = parseFloat(nums[2] ? nums[2].value : 0) || 0;
+    var q = parseFloat(nums[3] ? nums[3].value : 0) || 0;
+    var pipe = d + a + l;
+    var net  = pipe + q;
+    var pay  = { agency:ag, gerente:ger, date:dt, prodDesconto:d, antDemais:a, longoPrazo:l, liquidacaoTotal:q, pipe:pipe, netProjetado:net };
+    var store = JSON.parse(localStorage.getItem('lancamentos_prod_gerente') || '[]');
+    store = store.filter(function(r) { return !(r.agency===ag && r.gerente===ger && r.date===dt); });
+    store.push(pay);
+    localStorage.setItem('lancamentos_prod_gerente', JSON.stringify(store));
+    tr.style.background = '#e8f5f0';
+    showToast('✅ ' + ger + ' salvo!');
+    renderGerentesAgencia();
+    renderProdutividade();
   }
 
-  // ── Net Projetado Mês Regional ──────────────────────────
-  function calcNetProjMesRegional(mesParam) {
-    const mes = mesParam || new Date().toISOString().slice(0,7);
-    return AGENCIAS_LIST.reduce((total, agency) => {
-      const acum = calcAcumuladoMes(agency, mes);
-      if (!acum) return total;
-      const netAcum = acum.saldoLiq + acum.somaNetDia;
-      const netProj = netAcum + acum.saldoDesc + acum.saldoArv + acum.quenteIni;
-      return total + netProj;
-    }, 0);
-  }
+  // ══ FUNÇÕES GLOBAIS — acessíveis por onclick no HTML gerado ══
+  window.salvarGerente = function(btn) {
+    try {
+      var tr      = btn.parentNode.parentNode; // <td> -> <tr>
+      var agency  = btn.getAttribute('data-agency')  || document.getElementById('prod-agency').value;
+      var gerente = btn.getAttribute('data-gerente');
+      var date    = btn.getAttribute('data-date')    || document.getElementById('prod-data').value;
 
-  // ── Mini-dash Net Proj por Agência (aba Produtividade) ──
-  function renderMiniDashNetProj() {
-    const div = document.getElementById('mini-dash-netproj');
-    if (!div) return;
-    const agSel = document.getElementById('prod-agency') || document.getElementById('diario-filtro-ag');
-    const ag = agSel ? agSel.value : '';
-    if (!ag) { div.innerHTML = ''; return; }
-    const mes    = (document.getElementById('prod-mes')||{value:''}).value || new Date().toISOString().slice(0,7);
-    const saldos = JSON.parse(lsGetItem(SALDOS_KEY) || '{}');
-    const acum   = calcAcumuladoMes(ag, mes);
-    const sAg    = saldos[ag] || {};
-    const metaVop = Number(sAg.metaVopInicial) || 0;
-    const realVop = acum ? acum.somaVop : 0;
-    const pct     = metaVop > 0 ? Math.min((realVop / metaVop) * 100, 100) : 0;
-    const corVop  = pct >= 100 ? '#0d7a5f' : pct >= 70 ? '#e67e22' : '#b92d2d';
-    const circ    = 2 * Math.PI * 18;
-    const offset  = circ - (pct / 100) * circ;
-    var netProj = 0;
-    if (acum) {
-      const saldoDesc = (Number(sAg.descInicial)||0)   - acum.somaDesc;
-      const saldoArv  = (Number(sAg.arvInicial)||0)    - acum.somaAnt;
-      const saldoLiq  = (Number(sAg.liqInicial)||0)    - acum.somaLiq;
-      const quente    = Number(sAg.quenteInicial)||0;
-      const netAcum   = saldoLiq + acum.somaNetDia;
-      netProj = netAcum + saldoDesc + saldoArv + quente;
-    } else if (metaVop > 0) {
-      netProj = (Number(sAg.netAcumulado)||0) + (Number(sAg.descInicial)||0) + (Number(sAg.arvInicial)||0) + (Number(sAg.quenteInicial)||0) + (Number(sAg.liqInicial)||0);
-    } else { div.innerHTML = ''; return; }
-    const corNet = netProj >= 0 ? '#0d7a5f' : '#b92d2d';
-    const bgNet  = netProj >= 0 ? '#e8f5f0' : '#fde8e8';
-    div.innerHTML = `<div style="display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #e0e4ec;border-radius:10px;padding:12px 18px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="position:relative;width:50px;height:50px">
-          <svg width="50" height="50" viewBox="0 0 44 44" style="transform:rotate(-90deg)">
-            <circle cx="22" cy="22" r="18" fill="none" stroke="#f0f2f7" stroke-width="5"/>
-            <circle cx="22" cy="22" r="18" fill="none" stroke="${corVop}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${circ} ${circ}" stroke-dashoffset="${offset}"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
-            <span style="font-size:10px;font-weight:700;color:${corVop}">${Math.round(pct)}%</span>
-          </div>
-        </div>
-        <div>
-          <div style="font-size:10px;color:#888">VOP vs Meta</div>
-          <div style="font-size:12px;font-weight:700;color:#1a3a6e">${fmtShort(realVop)}</div>
-          <div style="font-size:10px;color:#aaa">meta: ${fmtShort(metaVop)}</div>
-        </div>
-      </div>
-      <div style="width:1px;height:50px;background:#e0e4ec"></div>
-      <div style="background:${bgNet};border-radius:8px;padding:8px 14px">
-        <div style="font-size:10px;color:#888;margin-bottom:2px">Net Proj. Mês — ${ag}</div>
-        <div style="font-size:16px;font-weight:700;color:${corNet}">${fmtShort(netProj)}</div>
-        <div style="font-size:9px;color:${corNet}">${netProj >= 0 ? '▲ positivo' : '⚠️ negativo'}</div>
-      </div>
-    </div>`;
-  }
+      if (!date)    { alert('Preencha a data!'); return; }
+      if (!agency)  { alert('Selecione a agência!'); return; }
+      if (!gerente) { alert('Gerente não identificado!'); return; }
 
-  // ── Trimestre ───────────────────────────────────────────
+      // Lê inputs pela classe CSS
+      var desc = 0, ant = 0, lp = 0, liq = 0;
+      var inputs = tr.getElementsByTagName('input');
+      var cols = [];
+      for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].type === 'number') cols.push(inputs[i]);
+      }
+      if (cols[0]) desc = parseFloat(cols[0].value) || 0;
+      if (cols[1]) ant  = parseFloat(cols[1].value) || 0;
+      if (cols[2]) lp   = parseFloat(cols[2].value) || 0;
+      if (cols[3]) liq  = parseFloat(cols[3].value) || 0;
+
+      var pipe = desc + ant + lp;
+      var net  = pipe + liq;
+      var payload = { agency:agency, gerente:gerente, date:date, prodDesconto:desc, antDemais:ant, longoPrazo:lp, liquidacaoTotal:liq, pipe:pipe, netProjetado:net };
+
+      var store = JSON.parse(localStorage.getItem('lancamentos_prod_gerente') || '[]');
+      store = store.filter(function(r){ return !(r.agency===agency && r.gerente===gerente && r.date===date); });
+      store.push(payload);
+      localStorage.setItem('lancamentos_prod_gerente', JSON.stringify(store));
+
+      tr.style.background = '#e8f5f0';
+      btn.textContent = '✅ Salvo';
+      setTimeout(function(){ btn.textContent = 'Salvar'; tr.style.background=''; }, 2000);
+
+      renderProdutividade();
+      renderGerentesAgencia();
+    } catch(e) {
+      alert('Erro: ' + e.message + '\nLinha: ' + e.lineNumber);
+    }
+  };
+
+  window.removerGerente = function(btn) {
+    const agency  = btn.getAttribute('data-agency');
+    const gerente = btn.getAttribute('data-gerente');
+    const date    = btn.getAttribute('data-date');
+    const modal   = document.getElementById('del-modal');
+    const msg     = document.getElementById('del-modal-msg');
+    const mbtn    = document.getElementById('del-modal-btn');
+    msg.innerHTML = 'Remover lançamento de <strong>' + gerente + '</strong> em ' + date + '?<br><small style="color:#888">Remove da produção diária e do lançamento por gerente.</small>';
+    mbtn.onclick  = function() {
+      modal.style.display = 'none';
+      excluirSincronizado(agency, date, gerente);
+      showToast('🗑 Removido de ambas as abas!');
+      renderGerentesAgencia();
+      renderProdutividade();
+      atualizarPainelGerentes();
+      };
+    modal.style.display = 'flex';
+  };
+
   const TRIM_KEY = 'historico_trimestre';
 
   function abrirNovoMes() {
@@ -3284,10 +3687,10 @@
     const msg   = document.getElementById('del-modal-msg');
     const btn   = document.getElementById('del-modal-btn');
     msg.innerHTML = 'Iniciar <strong>Novo Mês</strong>?<br><br>' +
-      'Os dados de <strong>' + mes + '</strong> serão arquivados na aba <strong>Trimestre</strong> e os campos serão limpos.<br><br>' +
+      'Os dados de <strong>' + mes + '</strong> serão arquivados no Trimestre e os campos serão limpos para o novo mês.<br><br>' +
       '<span style="color:#e67e22;font-size:11px">Esta ação não pode ser desfeita.</span>';
     btn.style.background = '#e67e22';
-    btn.textContent = '📅 Confirmar Novo Mês';
+    btn.textContent = 'Confirmar Novo Mês';
     btn.onclick = function() {
       modal.style.display = 'none';
       btn.style.background = '';
@@ -3299,85 +3702,209 @@
 
   function fecharMes(mes) {
     // Arquiva no TRIM_KEY
-    const historico = JSON.parse(lsGetItem(TRIM_KEY) || '{}');
+    const historico = JSON.parse(localStorage.getItem(TRIM_KEY) || '{}');
     historico[mes] = {
-      lancamentos:  JSON.parse(lsGetItem(STORE_KEY) || '[]').filter(r => r.date && r.date.startsWith(mes)),
-      prodGerentes: JSON.parse(lsGetItem(PROD_KEY)  || '[]').filter(r => r.date && r.date.startsWith(mes)),
-      saldos:       JSON.parse(lsGetItem(SALDOS_KEY)|| '{}'),
+      lancamentos: JSON.parse(localStorage.getItem(STORE_KEY) || '[]').filter(r => r.date && r.date.startsWith(mes)),
+      prodGerentes: JSON.parse(localStorage.getItem(PROD_KEY) || '[]').filter(r => r.date && r.date.startsWith(mes)),
+      saldos: JSON.parse(localStorage.getItem(SALDOS_KEY) || '{}'),
       archivedAt: new Date().toISOString()
     };
-    lsSetItem(TRIM_KEY, JSON.stringify(historico));
+    localStorage.setItem(TRIM_KEY, JSON.stringify(historico));
 
     // Limpa dados do mês
-    let store = JSON.parse(lsGetItem(STORE_KEY) || '[]');
+    let store = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
     store = store.filter(r => !r.date || !r.date.startsWith(mes));
-    lsSetItem(STORE_KEY, JSON.stringify(store));
+    localStorage.setItem(STORE_KEY, JSON.stringify(store));
 
-    let prod = JSON.parse(lsGetItem(PROD_KEY) || '[]');
+    let prod = JSON.parse(localStorage.getItem(PROD_KEY) || '[]');
     prod = prod.filter(r => !r.date || !r.date.startsWith(mes));
-    lsSetItem(PROD_KEY, JSON.stringify(prod));
+    localStorage.setItem(PROD_KEY, JSON.stringify(prod));
 
-    lsSetItem(SALDOS_KEY, JSON.stringify({}));
+    localStorage.removeItem(SALDOS_KEY);
 
-    showToast('✅ Mês ' + mes + ' arquivado! Campos limpos.');
+    showToast('✅ Mês ' + mes + ' arquivado! Campos limpos para o novo mês.');
     clearForm();
     atualizarDashTotal(new Date().toISOString().slice(0,10));
-    popularSelectTrimestre();
   }
 
   function renderTrimestre() {
-    const sel  = document.getElementById('trim-mes-sel').value;
+    const sel = document.getElementById('trim-mes-sel').value;
     const cont = document.getElementById('trim-content');
     if (!sel) { cont.innerHTML = '<div style="color:#aaa;font-size:12px;text-align:center;padding:16px">Selecione um mês</div>'; return; }
-    const historico = JSON.parse(lsGetItem(TRIM_KEY) || '{}');
+
+    const historico = JSON.parse(localStorage.getItem(TRIM_KEY) || '{}');
     const dados = historico[sel];
     if (!dados) { cont.innerHTML = '<div style="color:#aaa;text-align:center;padding:16px">Sem dados para ' + sel + '</div>'; return; }
+
     const lanc = dados.lancamentos || [];
     const prod = dados.prodGerentes || [];
-    const byAg = {}; const byGer = {};
-    lanc.forEach(r => {
+
+    // Totais por agência
+    const byAg = {};
+    lanc.forEach(function(r) {
       if (!byAg[r.agency]) byAg[r.agency] = { vop:0, net:0, dias:0 };
       byAg[r.agency].vop += (Number(r.prodDesconto)||0)+(Number(r.antDemais)||0)+(Number(r.longoPrazo)||0);
       byAg[r.agency].net += Number(r.netDia)||0;
       byAg[r.agency].dias++;
     });
-    prod.forEach(r => {
-      if (!byGer[r.gerente]) byGer[r.gerente] = { vop:0, net:0, dias:0 };
+
+    // Totais por gerente
+    const byGer = {};
+    prod.forEach(function(r) {
+      if (!byGer[r.gerente]) byGer[r.gerente] = { vop:0, net:0, dias:0, agency:r.agency };
       byGer[r.gerente].vop += Number(r.pipe)||0;
       byGer[r.gerente].net += Number(r.netProjetado)||0;
       byGer[r.gerente].dias++;
     });
+
     var html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+
+    // Tabela agências
     html += '<div><div style="font-size:11px;font-weight:700;color:#1a3a6e;margin-bottom:8px">🏦 Por Agência</div><div class="tbl-wrap"><table><thead><tr><th class="left">Agência</th><th>VOP</th><th>Net</th><th>Dias</th></tr></thead><tbody>';
-    var totVopAg=0, totNetAg=0;
-    Object.keys(byAg).sort().forEach(ag => {
-      const r=byAg[ag]; totVopAg+=r.vop; totNetAg+=r.net;
-      html += `<tr><td class="ag">${ag}</td><td style="text-align:right">${fmtShort(r.vop)}</td><td class="${r.net>=0?'pos':'neg'}" style="text-align:right">${fmtShort(r.net)}</td><td style="text-align:center">${r.dias}</td></tr>`;
+    var agKeys = Object.keys(byAg);
+    var totVopAg = 0, totNetAg = 0;
+    agKeys.sort().forEach(function(ag) {
+      var r = byAg[ag];
+      totVopAg += r.vop; totNetAg += r.net;
+      var nc = r.net >= 0 ? 'pos' : 'neg';
+      html += '<tr><td class="ag">'+ag+'</td><td style="text-align:right">'+fmtBRL(r.vop)+'</td><td class="'+nc+'" style="text-align:right">'+fmtBRL(r.net)+'</td><td style="text-align:center">'+r.dias+'</td></tr>';
     });
-    html += `<tr style="background:#1a3a6e;color:#fff;font-weight:700"><td>TOTAL</td><td style="text-align:right">${fmtShort(totVopAg)}</td><td style="text-align:right;color:${totNetAg>=0?'#90ee90':'#ff9999'}">${fmtShort(totNetAg)}</td><td></td></tr>`;
+    html += '<tr style="background:#1a3a6e;color:#fff;font-weight:700"><td>TOTAL</td><td style="text-align:right">'+fmtBRL(totVopAg)+'</td><td style="text-align:right;color:'+(totNetAg>=0?'#90ee90':'#ff9999')+'">'+fmtBRL(totNetAg)+'</td><td></td></tr>';
     html += '</tbody></table></div></div>';
+
+    // Tabela gerentes
     html += '<div><div style="font-size:11px;font-weight:700;color:#1a3a6e;margin-bottom:8px">👤 Por Gerente</div><div class="tbl-wrap"><table><thead><tr><th class="left">Gerente</th><th>VOP</th><th>Net</th><th>Dias</th></tr></thead><tbody>';
-    var totVopGer=0, totNetGer=0;
-    Object.keys(byGer).sort((a,b)=>byGer[b].vop-byGer[a].vop).forEach(ger => {
-      const r=byGer[ger]; totVopGer+=r.vop; totNetGer+=r.net;
-      const q=r.vop>25000000?'Q1':r.vop>19000000?'Q2':r.vop>13000000?'Q3':'Q4';
-      const qc=r.vop>25000000?'#1a3a6e':r.vop>19000000?'#0d7a5f':r.vop>13000000?'#e67e22':'#b92d2d';
-      html += `<tr><td class="ag">${ger} <span style="background:${qc};color:#fff;font-size:9px;padding:1px 5px;border-radius:10px">${q}</span></td><td style="text-align:right">${fmtShort(r.vop)}</td><td class="${r.net>=0?'pos':'neg'}" style="text-align:right">${fmtShort(r.net)}</td><td style="text-align:center">${r.dias}</td></tr>`;
+    var gerKeys = Object.keys(byGer);
+    var totVopGer = 0, totNetGer = 0;
+    gerKeys.sort(function(a,b){return byGer[b].vop-byGer[a].vop;}).forEach(function(ger) {
+      var r = byGer[ger];
+      totVopGer += r.vop; totNetGer += r.net;
+      var nc = r.net >= 0 ? 'pos' : 'neg';
+      var q = r.vop>25000000?'Q1':r.vop>19000000?'Q2':r.vop>13000000?'Q3':'Q4';
+      var qc = r.vop>25000000?'#1a3a6e':r.vop>19000000?'#0d7a5f':r.vop>13000000?'#e67e22':'#b92d2d';
+      html += '<tr><td class="ag">'+ger+' <span style="background:'+qc+';color:#fff;font-size:9px;padding:1px 5px;border-radius:10px">'+q+'</span></td><td style="text-align:right">'+fmtBRL(r.vop)+'</td><td class="'+nc+'" style="text-align:right">'+fmtBRL(r.net)+'</td><td style="text-align:center">'+r.dias+'</td></tr>';
     });
-    html += `<tr style="background:#1a3a6e;color:#fff;font-weight:700"><td>TOTAL</td><td style="text-align:right">${fmtShort(totVopGer)}</td><td style="text-align:right;color:${totNetGer>=0?'#90ee90':'#ff9999'}">${fmtShort(totNetGer)}</td><td></td></tr>`;
-    html += '</tbody></table></div></div></div>';
+    html += '<tr style="background:#1a3a6e;color:#fff;font-weight:700"><td>TOTAL</td><td style="text-align:right">'+fmtBRL(totVopGer)+'</td><td style="text-align:right;color:'+(totNetGer>=0?'#90ee90':'#ff9999')+'">'+fmtBRL(totNetGer)+'</td><td></td></tr>';
+    html += '</tbody></table></div></div>';
+
+    html += '</div>';
     cont.innerHTML = html;
   }
 
   function popularSelectTrimestre() {
     const sel = document.getElementById('trim-mes-sel');
     if (!sel) return;
-    const historico = JSON.parse(lsGetItem(TRIM_KEY) || '{}');
+    const historico = JSON.parse(localStorage.getItem(TRIM_KEY) || '{}');
     const meses = Object.keys(historico).sort().reverse();
     sel.innerHTML = '<option value="">Selecione o mês</option>';
-    meses.forEach(m => { const o=document.createElement('option'); o.value=m; o.textContent=m; sel.appendChild(o); });
+    meses.forEach(function(m) {
+      var opt = document.createElement('option');
+      opt.value = m; opt.textContent = m;
+      sel.appendChild(opt);
+    });
   }
 
+  function renderMiniDashNetProj() {
+    const div = document.getElementById('mini-dash-netproj');
+    if (!div) return;
+
+    const agSel = document.getElementById('prod-agency');
+    const ag    = agSel ? agSel.value : '';
+
+    if (!ag) {
+      div.innerHTML = '';
+      return;
+    }
+
+    const mes    = (document.getElementById('prod-mes') ? document.getElementById('prod-mes').value : '') || new Date().toISOString().slice(0,7);
+    const saldos = JSON.parse(localStorage.getItem(SALDOS_KEY) || '{}');
+    const acum   = calcAcumuladoMes(ag, mes);
+    const sAg    = saldos[ag] || {};
+
+    // VOP vs Meta — usa meta do SALDOS_KEY + VOP acumulado
+    const metaVop  = Number(sAg.metaVopInicial) || 0;
+    const realVop  = acum ? acum.somaVop : 0;
+    const pct      = metaVop > 0 ? Math.min((realVop / metaVop) * 100, 100) : 0;
+    const corVop   = pct >= 100 ? '#0d7a5f' : pct >= 70 ? '#e67e22' : '#b92d2d';
+    const circ     = 2 * Math.PI * 18;
+    const offset   = circ - (pct / 100) * circ;
+
+    // Net Projetado — calcula mesmo sem acum usando saldos iniciais
+    var netProj = 0;
+    const descIni  = Number(sAg.descInicial)   || 0;
+    const arvIni   = Number(sAg.arvInicial)    || 0;
+    const liqIni   = Number(sAg.liqInicial)    || 0;
+    const quente   = Number(sAg.quenteInicial) || 0;
+    const netAtual = Number(sAg.netAcumulado)  || 0;
+    if (acum) {
+      const saldoDesc = descIni - acum.somaDesc;
+      const saldoArv  = arvIni  - acum.somaAnt;
+      const saldoLiq  = liqIni  - acum.somaLiq;
+      const netAcum   = saldoLiq + acum.somaNetDia;
+      netProj = netAcum + saldoDesc + saldoArv + quente;
+    } else if (metaVop > 0 || descIni > 0) {
+      // Sem lançamentos ainda — mostra projeção baseada nos saldos iniciais
+      netProj = netAtual + descIni + arvIni + quente + liqIni;
+    } else {
+      // Nenhum dado — não mostra
+      div.innerHTML = '<div style="color:#aaa;font-size:11px;padding:8px">Preencha o quadro mensal da agência para ver a projeção.</div>';
+      return;
+    }
+    const corNet = netProj >= 0 ? '#0d7a5f' : '#b92d2d';
+    const bgNet  = netProj >= 0 ? '#e8f5f0' : '#fde8e8';
+
+    div.innerHTML =
+      '<div style="display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #e0e4ec;border-radius:10px;padding:12px 18px;flex-wrap:wrap">' +
+
+      // Relógio VOP
+      '<div style="display:flex;align-items:center;gap:10px">' +
+        '<div style="position:relative;width:50px;height:50px">' +
+          '<svg width="50" height="50" viewBox="0 0 44 44" style="transform:rotate(-90deg)">' +
+            '<circle cx="22" cy="22" r="18" fill="none" stroke="#f0f2f7" stroke-width="5"/>' +
+            '<circle cx="22" cy="22" r="18" fill="none" stroke="' + corVop + '" stroke-width="5" stroke-linecap="round" stroke-dasharray="' + circ + ' ' + circ + '" stroke-dashoffset="' + offset + '"/>' +
+          '</svg>' +
+          '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column">' +
+            '<span style="font-size:10px;font-weight:700;color:' + corVop + '">' + Math.round(pct) + '%</span>' +
+          '</div>' +
+        '</div>' +
+        '<div>' +
+          '<div style="font-size:10px;color:#888">VOP vs Meta</div>' +
+          '<div style="font-size:12px;font-weight:700;color:#1a3a6e">' + fmtBRL(realVop) + '</div>' +
+          '<div style="font-size:10px;color:#aaa">meta: ' + fmtBRL(metaVop) + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      // Separador
+      '<div style="width:1px;height:50px;background:#e0e4ec"></div>' +
+
+      // Net Proj Mês
+      '<div style="background:' + bgNet + ';border-radius:8px;padding:8px 14px">' +
+        '<div style="font-size:10px;color:#888;margin-bottom:2px">Net Proj. Mês</div>' +
+        '<div style="font-size:16px;font-weight:700;color:' + corNet + '">' + fmtBRL(netProj) + '</div>' +
+        '<div style="font-size:9px;color:' + corNet + '">' + (netProj >= 0 ? '▲ positivo' : '⚠️ negativo') + '</div>' +
+      '</div>' +
+
+      '</div>';
+  }
+
+  function calcNetProjMesRegional(mesParam) {
+    // Net Projetado = Net Acumulado + Saldo Desc + Saldo ARV + Quente
+    const mes = mesParam || new Date().toISOString().slice(0,7);
+    const agencias = ['Alphaville','Lapa','Osasco','Santana','Vila Maria','Sorocaba',
+                      'Tatuape','Cidade Jardim','Santo Amaro','JK','Itaim','Sumaré'];
+    return agencias.reduce(function(total, agency) {
+      const acum = calcAcumuladoMes(agency, mes);
+      if (!acum) return total;
+      // Net Acumulado = Saldo Liq + Net Atual (netDiaAnterior)
+      // Saldo Liq = liqInicial - somaLiq
+      const netAtual  = acum.somaNetDia;   // soma net dia do mês
+      const saldoLiq  = acum.saldoLiq;     // liqInicial - somaLiq
+      const netAcum   = saldoLiq + netAtual;
+      // Net Projetado = Net Acumulado + Saldo Desc + Saldo ARV + Quente
+      const netProj   = netAcum + acum.saldoDesc + acum.saldoArv + acum.quenteIni;
+      return total + netProj;
+    }, 0);
+  }
 
   function showToast(msg, isError) {
     const t = document.getElementById('toast');
@@ -3386,39 +3913,5 @@
     setTimeout(() => { t.className = 'toast'; }, 4000);
   }
 </script>
-
-<!-- Modal Editar Lançamento Gerente -->
-<div class="edit-modal-overlay" id="edit-prod-modal" style="display:none">
-  <div class="edit-modal-box">
-    <h2>✏️ Editar Lançamento</h2>
-    <div style="font-size:12px;color:#888;margin-bottom:14px" id="edit-prod-info"></div>
-    <div class="edit-grid">
-      <div class="edit-field">
-        <label>Prod. Desconto</label>
-        <input type="number" id="edit-desc" placeholder="0">
-      </div>
-      <div class="edit-field">
-        <label>Ant / Demais</label>
-        <input type="number" id="edit-ant" placeholder="0">
-      </div>
-      <div class="edit-field">
-        <label>Longo Prazo</label>
-        <input type="number" id="edit-lp" placeholder="0">
-      </div>
-      <div class="edit-field">
-        <label>Liquidação</label>
-        <input type="number" id="edit-liq" placeholder="0">
-      </div>
-    </div>
-    <div style="margin-top:6px;padding:8px 12px;background:#f0f4ff;border-radius:6px;font-size:12px;color:#1a3a6e">
-      Produção ⚡ <strong id="edit-calc-pipe">R$ 0</strong> &nbsp;|&nbsp; Net Projetado ⚡ <strong id="edit-calc-net">R$ 0</strong>
-    </div>
-    <div style="text-align:right;margin-top:16px">
-      <button class="btn-edit-save" onclick="salvarEdicaoProd()">✔ Salvar</button>
-      <button class="btn-edit-cancel" onclick="fecharEditProd()">Cancelar</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
